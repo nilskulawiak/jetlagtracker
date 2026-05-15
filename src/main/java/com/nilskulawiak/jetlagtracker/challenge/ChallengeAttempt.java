@@ -1,9 +1,11 @@
-package com.nilskulawiak.jetlagtracker.station;
+package com.nilskulawiak.jetlagtracker.challenge;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import com.nilskulawiak.jetlagtracker.team.Team;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -14,23 +16,28 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @Table(
     uniqueConstraints = @UniqueConstraint(
-        columnNames = {"station_id", "team_id"}
+        columnNames = {"challenge_id", "team_id"}
     )
 )
-public class StationChipState {
+@Getter
+@Setter
+public class ChallengeAttempt {
+
     @Id
     @GeneratedValue
     private UUID id;
 
-    @ManyToOne
-    private Station station;
+    @ManyToOne(optional = false)
+    private Challenge challenge;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Team team;
 
-    private int chips;
+    @Column(nullable = false)
+    private boolean success;
+
+    @Column(nullable = false)
+    private Instant attemptedAt = Instant.now();
 }

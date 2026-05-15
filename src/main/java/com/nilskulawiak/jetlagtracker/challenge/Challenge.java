@@ -6,6 +6,8 @@ import com.nilskulawiak.jetlagtracker.game.Game;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -33,8 +35,12 @@ public class Challenge {
     private Double yCoordinate;
 
     @Column(nullable = false)
-    private Integer rewardChips;
+    private int rewardChips;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ChallengeStatus status = ChallengeStatus.CREATED;
 
     @Column(nullable = false)
-    private String status;
+    private String description;
 }

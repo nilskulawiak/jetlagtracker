@@ -6,15 +6,21 @@ import java.util.UUID;
 public record GameResponse(
         UUID id,
         String name,
-        String status,
-        Instant createdAt
+        GameStatus status,
+        Instant createdAt,
+        Integer mapWidth,
+        Integer mapHeight,
+        String  mapImage
 ) {
     public static GameResponse from(Game game) {
         return new GameResponse(
                 game.getId(),
                 game.getName(),
                 game.getStatus(),
-                game.getCreatedAt()
+                game.getCreatedAt(),
+                game.getMapWidth(),
+                game.getMapHeight(),
+                game.getMapImage()
         );
     }
 }

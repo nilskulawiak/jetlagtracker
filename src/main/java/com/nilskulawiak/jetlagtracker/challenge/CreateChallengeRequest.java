@@ -8,6 +8,7 @@ public record CreateChallengeRequest(
         @NotNull Double xCoordinate,
         @NotNull Double yCoordinate,
         @NotNull Integer rewardChips,
-        @NotBlank String status) {
+        ChallengeStatus status,
+        @NotBlank String description) {
 
 }

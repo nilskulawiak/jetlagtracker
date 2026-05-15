@@ -19,9 +19,19 @@ public class Game {
     @Column(nullable = false)
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status = "SETUP";
+    private GameStatus status = GameStatus.CREATED;
 
     @Column(nullable = false)
     private Instant createdAt = Instant.now();
+
+    @Column(nullable = false)
+    private int mapWidth;
+
+    @Column(nullable = false)
+    private int mapHeight;    
+
+    @Column(nullable = false)
+    private String mapImage;
 }

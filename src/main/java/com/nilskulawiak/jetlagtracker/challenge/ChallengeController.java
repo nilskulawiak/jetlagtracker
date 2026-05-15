@@ -25,4 +25,16 @@ public class ChallengeController {
     public ChallengeResponse createChallenge(@PathVariable UUID gameId, @Valid @RequestBody CreateChallengeRequest request) {
         return challengeService.createChallenge(gameId, request);
     }
+
+    @PostMapping("{challengeId}/complete")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ChallengeResponse completeChallenge(@PathVariable UUID gameId, @PathVariable UUID challengeId, @Valid @RequestBody FinishChallengeRequest request) {
+        return challengeService.completeChallenge(gameId, challengeId, request);
+    }
+
+    @PostMapping("{challengeId}/fail")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ChallengeResponse failChallenge(@PathVariable UUID gameId, @PathVariable UUID challengeId, @Valid @RequestBody FinishChallengeRequest request) {
+        return challengeService.failChallenge(gameId, challengeId, request);
+    }
 }

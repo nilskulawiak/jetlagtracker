@@ -6,8 +6,8 @@ public record StationResponse(
         UUID id,
         UUID gameId,
         String name,
-        Double xCoordinate,
-        Double yCoordinate) {
+        Integer xCoordinate,
+        Integer yCoordinate) {
     public static StationResponse from(Station station) {
         return new StationResponse(
                 station.getId(),

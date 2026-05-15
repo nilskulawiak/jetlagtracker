@@ -9,7 +9,8 @@ public record ChallengeResponse(
         Double xCoordinate,
         Double yCoordinate,
         Integer rewardChips,
-        String status) {
+        ChallengeStatus status,
+        String description) {
     public static ChallengeResponse from(Challenge challenge) {
         return new ChallengeResponse(
                 challenge.getId(),
@@ -18,6 +19,7 @@ public record ChallengeResponse(
                 challenge.getXCoordinate(),
                 challenge.getYCoordinate(),
                 challenge.getRewardChips(),
-                challenge.getStatus());
+                challenge.getStatus(),
+                challenge.getDescription());
     }
 }
