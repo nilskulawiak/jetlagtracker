@@ -1,0 +1,26 @@
+GET    /games/:gameId
+GET    /games/:gameId/state
+
+POST   /games
+POST   /games/:gameId/start
+POST   /games/:gameId/finish
+
+POST   /games/:gameId/teams
+POST   /games/:gameId/stations
+POST   /games/:gameId/challenges
+
+POST   /games/:gameId/stations/:stationId/chips
+POST   /games/:gameId/challenges/:challengeId/complete
+POST   /games/:gameId/challenges/:challengeId/fail
+
+GET    /games/:gameId/actions
+
+Create game
+Add two teams
+Add stations
+Add challenges
+Add chips to station
+Complete challenge
+Calculate station owner
+Return full game state
+Store action history
