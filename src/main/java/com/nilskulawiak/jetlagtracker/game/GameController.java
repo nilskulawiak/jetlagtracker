@@ -29,7 +29,7 @@ public class GameController {
 
     @PostMapping("{gameId}/start")
     @ResponseStatus(HttpStatus.OK)
-    public GameResponse createGame(@PathVariable UUID gameId, @Valid @RequestBody StartGameRequest request) {
+    public GameResponse startGame(@PathVariable UUID gameId, @Valid @RequestBody StartGameRequest request) {
         return gameService.startGame(gameId, request);
     }
 
