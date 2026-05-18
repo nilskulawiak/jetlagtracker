@@ -2,7 +2,6 @@ package com.nilskulawiak.jetlagtracker.challenge;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -18,8 +17,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.nilskulawiak.jetlagtracker.action.GameActionService;
 import com.nilskulawiak.jetlagtracker.game.Game;
 import com.nilskulawiak.jetlagtracker.game.GameRepository;
+import com.nilskulawiak.jetlagtracker.game.GameStatus;
 import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
 
@@ -38,6 +39,9 @@ class ChallengeServiceTest {
     @Mock
     private ChallengeAttemptRepository challengeAttemptRepository;
 
+    @Mock
+    private GameActionService gameActionService;
+
     private ChallengeService challengeService;
 
     @BeforeEach
@@ -46,7 +50,8 @@ class ChallengeServiceTest {
                 challengeRepository,
                 gameRepository,
                 teamRepository,
-                challengeAttemptRepository);
+                challengeAttemptRepository,
+                gameActionService);
     }
 
     @Test
@@ -60,6 +65,7 @@ class ChallengeServiceTest {
         when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
         when(challengeAttemptRepository.existsByChallengeAndTeam(challenge, team)).thenReturn(false);
         when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of(replacement));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
 
         ChallengeResponse response = challengeService.completeChallenge(
                 game.getId(),
@@ -89,6 +95,7 @@ class ChallengeServiceTest {
         when(challengeAttemptRepository.existsByChallengeAndTeam(challenge, team)).thenReturn(false);
         when(teamRepository.countByGame(game)).thenReturn(2L);
         when(challengeAttemptRepository.countByChallengeAndSuccessFalse(challenge)).thenReturn(1L);
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
 
         ChallengeResponse response = challengeService.failChallenge(
                 game.getId(),
@@ -113,6 +120,7 @@ class ChallengeServiceTest {
         when(teamRepository.countByGame(game)).thenReturn(2L);
         when(challengeAttemptRepository.countByChallengeAndSuccessFalse(challenge)).thenReturn(2L);
         when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of(replacement));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
 
         ChallengeResponse response = challengeService.failChallenge(
                 game.getId(),
@@ -134,6 +142,7 @@ class ChallengeServiceTest {
         when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
         when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
         when(challengeAttemptRepository.existsByChallengeAndTeam(challenge, team)).thenReturn(true);
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
 
         assertThatThrownBy(() -> challengeService.completeChallenge(
                 game.getId(),
@@ -143,7 +152,6 @@ class ChallengeServiceTest {
                 .hasMessage("Team has already attempted this challenge");
 
         verify(challengeAttemptRepository).existsByChallengeAndTeam(challenge, team);
-        verifyNoInteractions(gameRepository);
     }
 
     private static Game gameWithId(UUID id) {
@@ -153,6 +161,7 @@ class ChallengeServiceTest {
         game.setMapWidth(1000);
         game.setMapHeight(1000);
         game.setMapImage("taiwan.png");
+        game.setStatus(GameStatus.STARTED);
         return game;
     }
 

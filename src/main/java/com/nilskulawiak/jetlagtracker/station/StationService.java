@@ -6,8 +6,11 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nilskulawiak.jetlagtracker.action.GameActionService;
+import com.nilskulawiak.jetlagtracker.action.GameActionType;
 import com.nilskulawiak.jetlagtracker.game.Game;
 import com.nilskulawiak.jetlagtracker.game.GameRepository;
+import com.nilskulawiak.jetlagtracker.game.GameStatus;
 import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
 
@@ -20,6 +23,7 @@ public class StationService {
     private final GameRepository gameRepository;
     private final TeamRepository teamRepository;
     private final StationChipStateRepository stationChipStateRepository;
+    private final GameActionService gameActionService;
 
     public StationResponse createStation(UUID gameId, CreateStationRequest request){
         Game game = gameRepository.findById(gameId).orElseThrow();
@@ -30,6 +34,13 @@ public class StationService {
         station.setYCoordinate(request.yCoordinate());
         station.setGame(game);
         stationRepository.save(station);
+
+        gameActionService.log(
+                game,
+                GameActionType.STATION_CREATED,
+                station.getName() + " was created"
+        );
+
         return StationResponse.from(station);
     }
     
@@ -37,6 +48,11 @@ public class StationService {
     public StationChipStateResponse addChipsToStation(UUID gameId, UUID stationId, AddChipsRequest request){
         Station station = stationRepository.findById(stationId).orElseThrow();
         Team team = teamRepository.findById(request.teamId()).orElseThrow();
+        Game game = gameRepository.findById(gameId).orElseThrow();
+
+        if (game.getStatus() != GameStatus.STARTED){
+            throw new IllegalArgumentException("Game has not yet started");
+        }
 
         if (!station.getGame().getId().equals(gameId)) {
             throw new IllegalArgumentException("Station does not belong to this game");
@@ -84,6 +100,13 @@ public class StationService {
                 team.getAvailableChips() - request.chips()
         );
 
+        gameActionService.log(
+                game,
+                GameActionType.CHIPS_ADDED_TO_STATION,
+                team.getName() + " added " + request.chips()
+                        + " chips to " + station.getName()
+);
+
         StationChipState savedState = stationChipStateRepository.save(state);
         return StationChipStateResponse.from(savedState);
     }
@@ -103,5 +126,5 @@ public class StationService {
                 .mapToInt(StationChipState::getChips)
                 .max()
                 .orElse(0);
-}
+    }
 }

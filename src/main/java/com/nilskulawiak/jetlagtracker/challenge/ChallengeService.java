@@ -7,8 +7,11 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nilskulawiak.jetlagtracker.action.GameActionService;
+import com.nilskulawiak.jetlagtracker.action.GameActionType;
 import com.nilskulawiak.jetlagtracker.game.Game;
 import com.nilskulawiak.jetlagtracker.game.GameRepository;
+import com.nilskulawiak.jetlagtracker.game.GameStatus;
 import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
 
@@ -22,6 +25,7 @@ public class ChallengeService {
     private final GameRepository gameRepository;
     private final TeamRepository teamRepository;
     private final ChallengeAttemptRepository challengeAttemptRepository;
+    private final GameActionService gameActionService;
 
     public ChallengeResponse createChallenge(UUID gameId, CreateChallengeRequest request) {
         Game game = gameRepository.findById(gameId)
@@ -38,6 +42,12 @@ public class ChallengeService {
 
         Challenge savedChallenge = challengeRepository.save(challenge);
 
+        gameActionService.log(
+                game,
+                GameActionType.CHALLENGE_CREATED,
+                savedChallenge.getName() + " was created"
+        );
+
         return ChallengeResponse.from(savedChallenge);
     }
 
@@ -49,7 +59,13 @@ public class ChallengeService {
         Team team = teamRepository.findById(request.teamId())
                 .orElseThrow(() -> new IllegalArgumentException("Team not found"));
 
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Game not found"));
+    
         validateSameGame(gameId, team, challenge);
+
+        if (game.getStatus() != GameStatus.STARTED){
+            throw new IllegalArgumentException("Game has not yet started");
+        }
 
         if (ChallengeStatus.AVAILABLE != challenge.getStatus()) {
             throw new IllegalArgumentException("Challenge not available");
@@ -69,6 +85,13 @@ public class ChallengeService {
         challenge.setStatus(ChallengeStatus.DONE);
         makeRandomChallengeAvailable(challenge.getGame());
 
+        gameActionService.log(
+                game,
+                GameActionType.CHALLENGE_COMPLETED,
+                team.getName() + " completed " + challenge.getName()
+                        + " and gained " + challenge.getRewardChips() + " chips"
+        );
+
         return ChallengeResponse.from(challenge);
     }
 
@@ -80,7 +103,13 @@ public class ChallengeService {
         Team team = teamRepository.findById(request.teamId())
                 .orElseThrow(() -> new IllegalArgumentException("Team not found"));
 
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Game not found"));
+    
         validateSameGame(gameId, team, challenge);
+
+        if (game.getStatus() != GameStatus.STARTED){
+            throw new IllegalArgumentException("Game has not yet started");
+        }
 
         if (ChallengeStatus.AVAILABLE != challenge.getStatus()) {
             throw new IllegalArgumentException("Challenge not available");
@@ -102,6 +131,13 @@ public class ChallengeService {
             challenge.setStatus(ChallengeStatus.DONE);
             makeRandomChallengeAvailable(challenge.getGame());
         }
+
+        gameActionService.log(
+                game,
+                GameActionType.CHALLENGE_FAILED,
+                team.getName() + " completed " + challenge.getName()
+                        + " and gained " + challenge.getRewardChips() + " chips"
+        );
 
         return ChallengeResponse.from(challenge);
     }

@@ -3,6 +3,7 @@ package com.nilskulawiak.jetlagtracker.game;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,5 +31,23 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     public GameResponse createGame(@PathVariable UUID gameId, @Valid @RequestBody StartGameRequest request) {
         return gameService.startGame(gameId, request);
+    }
+
+    @GetMapping("/{gameId}/state")
+    public GameStateResponse getGameState(@PathVariable UUID gameId) {
+        return gameService.getGameState(gameId);
+    }
+
+    @GetMapping()
+    public GamesResponse getGames() {
+        return gameService.getGames();
+    }
+
+    @PostMapping("/from-preset")
+    @ResponseStatus(HttpStatus.CREATED)
+    public GameResponse createGameFromPreset(
+            @Valid @RequestBody CreateGameFromPresetRequest request
+    ) {
+        return gameService.createGameFromPreset(request);
     }
 }

@@ -1,0 +1,60 @@
+{
+  "id": "taiwan-rail-rush",
+  "name": "Taiwan Rail Rush",
+  "mapHeight": 1079,
+  "mapWidth": 953,
+  "mapImage": "taiwan.png",
+  "stations": [
+    { "name": "Taipei", "xCoordinate": 613, "yCoordinate": 187 },
+    { "name": "Keelung", "xCoordinate": 644, "yCoordinate": 172 },
+    { "name": "Taoyuan", "xCoordinate": 575, "yCoordinate": 205 },
+    { "name": "Hsinchu", "xCoordinate": 520, "yCoordinate": 250 },
+    { "name": "Miaoli", "xCoordinate": 485, "yCoordinate": 308 },
+    { "name": "Taichung", "xCoordinate": 430, "yCoordinate": 382 },
+    { "name": "Changhua", "xCoordinate": 398, "yCoordinate": 443 },
+    { "name": "Chiayi", "xCoordinate": 330, "yCoordinate": 593 },
+    { "name": "Tainan", "xCoordinate": 310, "yCoordinate": 748 },
+    { "name": "Kaohsiung", "xCoordinate": 310, "yCoordinate": 826 },
+    { "name": "Pingtung", "xCoordinate": 345, "yCoordinate": 855 },
+    { "name": "Taitung", "xCoordinate": 520, "yCoordinate": 835 },
+    { "name": "Hualien", "xCoordinate": 690, "yCoordinate": 510 },
+    { "name": "Yilan", "xCoordinate": 690, "yCoordinate": 265 }
+  ],
+  "challenges": [
+    {
+      "name": "Night Market Challenge",
+      "description": "Complete a local food challenge.",
+      "rewardChips": 10,
+      "xCoordinate": 455,
+      "yCoordinate": 385
+    },
+    {
+      "name": "Temple Photo Challenge",
+      "description": "Take a photo near a temple or landmark.",
+      "rewardChips": 8,
+      "xCoordinate": 635,
+      "yCoordinate": 215
+    },
+    {
+      "name": "Coastal Challenge",
+      "description": "Complete a task near the east coast.",
+      "rewardChips": 12,
+      "xCoordinate": 720,
+      "yCoordinate": 505
+    },
+    {
+      "name": "Southern City Challenge",
+      "description": "Complete a challenge in the south.",
+      "rewardChips": 9,
+      "xCoordinate": 345,
+      "yCoordinate": 815
+    },
+    {
+      "name": "Mountain Route Challenge",
+      "description": "Complete a task near the central route.",
+      "rewardChips": 15,
+      "xCoordinate": 485,
+      "yCoordinate": 520
+    }
+  ]
+}

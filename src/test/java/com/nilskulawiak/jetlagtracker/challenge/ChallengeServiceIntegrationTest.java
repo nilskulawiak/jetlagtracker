@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nilskulawiak.jetlagtracker.game.Game;
 import com.nilskulawiak.jetlagtracker.game.GameRepository;
+import com.nilskulawiak.jetlagtracker.game.GameStatus;
 import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
 
@@ -82,6 +83,7 @@ class ChallengeServiceIntegrationTest {
         game.setMapWidth(1000);
         game.setMapHeight(1000);
         game.setMapImage("taiwan.png");
+        game.setStatus(GameStatus.STARTED);
         return game;
     }
 
