@@ -29,10 +29,10 @@ public class Challenge {
     private String name;
 
     @Column(nullable = false)
-    private Double xCoordinate;
+    private Integer xCoordinate;
 
     @Column(nullable = false)
-    private Double yCoordinate;
+    private Integer yCoordinate;
 
     @Column(nullable = false)
     private int rewardChips;

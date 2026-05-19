@@ -6,8 +6,8 @@ public record ChallengeResponse(
         UUID id,
         UUID gameId,
         String name,
-        Double xCoordinate,
-        Double yCoordinate,
+        Integer xCoordinate,
+        Integer yCoordinate,
         Integer rewardChips,
         ChallengeStatus status,
         String description) {

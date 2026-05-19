@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record CreateChallengeRequest(
         @NotBlank String name,
-        @NotNull Double xCoordinate,
-        @NotNull Double yCoordinate,
+        @NotNull Integer xCoordinate,
+        @NotNull Integer yCoordinate,
         @NotNull Integer rewardChips,
         ChallengeStatus status,
         @NotBlank String description) {
