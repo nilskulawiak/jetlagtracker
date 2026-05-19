@@ -194,6 +194,7 @@ public GameResponse createGameFromPreset(CreateGameFromPresetRequest request) {
         challenge.setXCoordinate(challengePreset.xCoordinate());
         challenge.setYCoordinate(challengePreset.yCoordinate());
         challenge.setStatus(ChallengeStatus.CREATED);
+        challenge.setChallengeType(challengePreset.challengeType());
         challengeRepository.save(challenge);
     }
 

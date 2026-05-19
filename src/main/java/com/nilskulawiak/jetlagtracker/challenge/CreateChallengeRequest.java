@@ -10,6 +10,6 @@ public record CreateChallengeRequest(
         @NotNull Integer reward,
         ChallengeStatus status,
         @NotBlank String description,
-        @NotBlank ChallengeType challengeType) {
+        @NotNull ChallengeType challengeType) {
 
 }

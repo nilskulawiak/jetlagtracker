@@ -14,7 +14,6 @@ import com.nilskulawiak.jetlagtracker.game.GameRepository;
 import com.nilskulawiak.jetlagtracker.game.GameStatus;
 import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
-import com.nilskulawiak.jetlagtracker.challenge.ChallengeType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,7 +38,9 @@ public class ChallengeService {
         challenge.setReward(request.reward());
         challenge.setStatus(request.status());
         challenge.setDescription(request.description());
+        challenge.setChallengeType(request.challengeType());
         challenge.setGame(game);
+        
 
         Challenge savedChallenge = challengeRepository.save(challenge);
 
