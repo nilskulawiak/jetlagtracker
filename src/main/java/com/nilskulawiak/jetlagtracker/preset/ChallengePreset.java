@@ -4,7 +4,7 @@ public record ChallengePreset(
         String name,
         String description,
         int rewardChips,
-        double xCoordinate,
-        double yCoordinate
+        Integer xCoordinate,
+        Integer yCoordinate
 ) {
 }
