@@ -24,35 +24,40 @@
     {
       "name": "Night Market Challenge",
       "description": "Complete a local food challenge.",
-      "rewardChips": 10,
+      "challengeType": "CHIPS",
+      "reward": 10,
       "xCoordinate": 455,
       "yCoordinate": 385
     },
     {
       "name": "Temple Photo Challenge",
       "description": "Take a photo near a temple or landmark.",
-      "rewardChips": 8,
+      "challengeType": "CHIPS",
+      "reward": 8,
       "xCoordinate": 635,
       "yCoordinate": 215
     },
     {
       "name": "Coastal Challenge",
       "description": "Complete a task near the east coast.",
-      "rewardChips": 12,
+      "challengeType": "STEAL",
+      "reward": 25,
       "xCoordinate": 720,
       "yCoordinate": 505
     },
     {
       "name": "Southern City Challenge",
       "description": "Complete a challenge in the south.",
-      "rewardChips": 9,
+      "challengeType": "MULTIPLIER",
+      "reward": 50,
       "xCoordinate": 345,
       "yCoordinate": 815
     },
     {
       "name": "Mountain Route Challenge",
       "description": "Complete a task near the central route.",
-      "rewardChips": 15,
+      "challengeType": "CHIPS",
+      "reward": 15,
       "xCoordinate": 485,
       "yCoordinate": 520
     }
