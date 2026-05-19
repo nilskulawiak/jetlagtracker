@@ -41,7 +41,7 @@ class ChallengeServiceIntegrationTest {
         Challenge active = challengeRepository.save(newChallenge(game, "Active", ChallengeStatus.AVAILABLE, 20));
         Challenge queued = challengeRepository.save(newChallenge(game, "Queued", ChallengeStatus.CREATED, 5));
 
-        challengeService.completeChallenge(game.getId(), active.getId(), new FinishChallengeRequest(team.getId()));
+        challengeService.completeChallenge(game.getId(), active.getId(), new FinishChallengeRequest(team.getId(), null));
 
         Challenge savedActive = challengeRepository.findById(active.getId()).orElseThrow();
         Challenge savedQueued = challengeRepository.findById(queued.getId()).orElseThrow();
@@ -61,19 +61,19 @@ class ChallengeServiceIntegrationTest {
         Challenge active = challengeRepository.save(newChallenge(game, "Active", ChallengeStatus.AVAILABLE, 8));
         Challenge queued = challengeRepository.save(newChallenge(game, "Queued", ChallengeStatus.CREATED, 5));
 
-        challengeService.failChallenge(game.getId(), active.getId(), new FinishChallengeRequest(firstTeam.getId()));
+        challengeService.failChallenge(game.getId(), active.getId(), new FinishChallengeRequest(firstTeam.getId(), null));
 
         Challenge afterFirstFailure = challengeRepository.findById(active.getId()).orElseThrow();
         assertThat(afterFirstFailure.getStatus()).isEqualTo(ChallengeStatus.AVAILABLE);
-        assertThat(afterFirstFailure.getRewardChips()).isEqualTo(12);
+        assertThat(afterFirstFailure.getReward()).isEqualTo(12);
 
-        challengeService.failChallenge(game.getId(), active.getId(), new FinishChallengeRequest(finalTeam.getId()));
+        challengeService.failChallenge(game.getId(), active.getId(), new FinishChallengeRequest(finalTeam.getId(), null));
 
         Challenge afterFinalFailure = challengeRepository.findById(active.getId()).orElseThrow();
         Challenge savedQueued = challengeRepository.findById(queued.getId()).orElseThrow();
 
         assertThat(afterFinalFailure.getStatus()).isEqualTo(ChallengeStatus.DONE);
-        assertThat(afterFinalFailure.getRewardChips()).isEqualTo(18);
+        assertThat(afterFinalFailure.getReward()).isEqualTo(18);
         assertThat(savedQueued.getStatus()).isEqualTo(ChallengeStatus.AVAILABLE);
     }
 
@@ -100,9 +100,9 @@ class ChallengeServiceIntegrationTest {
         Challenge challenge = new Challenge();
         challenge.setGame(game);
         challenge.setName(name);
-        challenge.setXCoordinate(10.0);
-        challenge.setYCoordinate(20.0);
-        challenge.setRewardChips(rewardChips);
+        challenge.setXCoordinate(10);
+        challenge.setYCoordinate(20);
+        challenge.setReward(rewardChips);
         challenge.setStatus(status);
         challenge.setDescription("Integration test challenge");
         return challenge;

@@ -8,7 +8,7 @@ public record ChallengeResponse(
         String name,
         Integer xCoordinate,
         Integer yCoordinate,
-        Integer rewardChips,
+        Integer reward,
         ChallengeStatus status,
         String description) {
     public static ChallengeResponse from(Challenge challenge) {
@@ -18,7 +18,7 @@ public record ChallengeResponse(
                 challenge.getName(),
                 challenge.getXCoordinate(),
                 challenge.getYCoordinate(),
-                challenge.getRewardChips(),
+                challenge.getReward(),
                 challenge.getStatus(),
                 challenge.getDescription());
     }

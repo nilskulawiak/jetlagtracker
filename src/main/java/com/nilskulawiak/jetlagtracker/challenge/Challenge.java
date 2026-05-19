@@ -35,7 +35,7 @@ public class Challenge {
     private Integer yCoordinate;
 
     @Column(nullable = false)
-    private int rewardChips;
+    private int reward;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -43,4 +43,7 @@ public class Challenge {
 
     @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
+    private ChallengeType challengeType;
 }

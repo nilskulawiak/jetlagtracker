@@ -14,6 +14,7 @@ import com.nilskulawiak.jetlagtracker.game.GameRepository;
 import com.nilskulawiak.jetlagtracker.game.GameStatus;
 import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
+import com.nilskulawiak.jetlagtracker.challenge.ChallengeType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +36,7 @@ public class ChallengeService {
         challenge.setName(request.name());
         challenge.setXCoordinate(request.xCoordinate());
         challenge.setYCoordinate(request.yCoordinate());
-        challenge.setRewardChips(request.rewardChips());
+        challenge.setReward(request.reward());
         challenge.setStatus(request.status());
         challenge.setDescription(request.description());
         challenge.setGame(game);
@@ -81,7 +82,19 @@ public class ChallengeService {
         attempt.setSuccess(true);
         challengeAttemptRepository.save(attempt);
 
-        team.setAvailableChips(team.getAvailableChips() + challenge.getRewardChips());
+        switch (challenge.getChallengeType()){
+            case CHIPS -> {
+                team.setAvailableChips(team.getAvailableChips() + challenge.getReward());
+            }
+            case MULTIPLIER -> {
+                team.setAvailableChips(team.getAvailableChips() * challenge.getReward() / 100);
+            }
+            case STEAL -> {
+                UUID enemyTeamId = request.enemyTeamId();
+                applyStealReward(challenge, team, enemyTeamId);
+            }
+        }
+
         challenge.setStatus(ChallengeStatus.DONE);
         makeRandomChallengeAvailable(challenge.getGame());
 
@@ -89,7 +102,7 @@ public class ChallengeService {
                 game,
                 GameActionType.CHALLENGE_COMPLETED,
                 team.getName() + " completed " + challenge.getName()
-                        + " and gained " + challenge.getRewardChips() + " chips"
+                        + " and gained " + challenge.getReward() + " chips"
         );
 
         return ChallengeResponse.from(challenge);
@@ -125,7 +138,7 @@ public class ChallengeService {
         attempt.setSuccess(false);
         challengeAttemptRepository.save(attempt);
 
-        challenge.setRewardChips((int) Math.ceil(challenge.getRewardChips() * 1.5));
+        challenge.setReward((int) Math.ceil(challenge.getReward() * 1.5));
 
         if (allTeamsFailed(challenge)) {
             challenge.setStatus(ChallengeStatus.DONE);
@@ -136,7 +149,7 @@ public class ChallengeService {
                 game,
                 GameActionType.CHALLENGE_FAILED,
                 team.getName() + " completed " + challenge.getName()
-                        + " and gained " + challenge.getRewardChips() + " chips"
+                        + " and gained " + challenge.getReward() + " chips"
         );
 
         return ChallengeResponse.from(challenge);
@@ -169,4 +182,32 @@ public class ChallengeService {
         Challenge nextChallenge = createdChallenges.get(ThreadLocalRandom.current().nextInt(createdChallenges.size()));
         nextChallenge.setStatus(ChallengeStatus.AVAILABLE);
     }
+
+private void applyStealReward(
+        Challenge challenge,
+        Team team,
+        UUID enemyTeamId
+) {
+
+    if (enemyTeamId == null) {
+        throw new IllegalArgumentException("Enemy team is required for steal challenges");
+    }
+
+    if (enemyTeamId.equals(team.getId())) {
+        throw new IllegalArgumentException("Team cannot steal from itself");
+    }
+
+    Team enemyTeam = teamRepository.findById(enemyTeamId)
+            .orElseThrow(() -> new IllegalArgumentException("Enemy team not found"));
+
+    if (!enemyTeam.getGame().getId().equals(team.getGame().getId())) {
+        throw new IllegalArgumentException("Enemy team does not belong to this game");
+    }
+
+    int stolenPercent = challenge.getReward();
+    int stolenAmount = enemyTeam.getAvailableChips() * stolenPercent / 100;
+
+    enemyTeam.setAvailableChips(enemyTeam.getAvailableChips() - stolenAmount);
+    team.setAvailableChips(team.getAvailableChips() + stolenAmount);
+}
 }

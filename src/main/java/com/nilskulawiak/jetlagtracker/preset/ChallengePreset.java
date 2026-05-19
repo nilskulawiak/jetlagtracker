@@ -1,10 +1,13 @@
 package com.nilskulawiak.jetlagtracker.preset;
 
+import com.nilskulawiak.jetlagtracker.challenge.ChallengeType;
+
 public record ChallengePreset(
         String name,
         String description,
-        int rewardChips,
+        int reward,
         Integer xCoordinate,
-        Integer yCoordinate
+        Integer yCoordinate,
+        ChallengeType challengeType
 ) {
 }

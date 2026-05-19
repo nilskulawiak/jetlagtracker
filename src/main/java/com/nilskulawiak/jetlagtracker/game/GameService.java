@@ -190,7 +190,7 @@ public GameResponse createGameFromPreset(CreateGameFromPresetRequest request) {
         challenge.setGame(game);
         challenge.setName(challengePreset.name());
         challenge.setDescription(challengePreset.description());
-        challenge.setRewardChips(challengePreset.rewardChips());
+        challenge.setReward(challengePreset.reward());
         challenge.setXCoordinate(challengePreset.xCoordinate());
         challenge.setYCoordinate(challengePreset.yCoordinate());
         challenge.setStatus(ChallengeStatus.CREATED);

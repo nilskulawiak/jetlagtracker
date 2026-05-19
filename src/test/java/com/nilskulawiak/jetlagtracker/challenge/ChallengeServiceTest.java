@@ -69,7 +69,7 @@ class ChallengeServiceTest {
         ChallengeResponse response = challengeService.completeChallenge(
                 game.getId(),
                 challenge.getId(),
-                new FinishChallengeRequest(team.getId()));
+                new FinishChallengeRequest(team.getId(), null));
 
         assertThat(response.status()).isEqualTo(ChallengeStatus.DONE);
         assertThat(challenge.getStatus()).isEqualTo(ChallengeStatus.DONE);
@@ -99,11 +99,11 @@ class ChallengeServiceTest {
         ChallengeResponse response = challengeService.failChallenge(
                 game.getId(),
                 challenge.getId(),
-                new FinishChallengeRequest(team.getId()));
+                new FinishChallengeRequest(team.getId(), null));
 
         assertThat(response.status()).isEqualTo(ChallengeStatus.AVAILABLE);
         assertThat(challenge.getStatus()).isEqualTo(ChallengeStatus.AVAILABLE);
-        assertThat(challenge.getRewardChips()).isEqualTo(15);
+        assertThat(challenge.getReward()).isEqualTo(15);
     }
 
     @Test
@@ -124,11 +124,11 @@ class ChallengeServiceTest {
         ChallengeResponse response = challengeService.failChallenge(
                 game.getId(),
                 challenge.getId(),
-                new FinishChallengeRequest(team.getId()));
+                new FinishChallengeRequest(team.getId(), null));
 
         assertThat(response.status()).isEqualTo(ChallengeStatus.DONE);
         assertThat(challenge.getStatus()).isEqualTo(ChallengeStatus.DONE);
-        assertThat(challenge.getRewardChips()).isEqualTo(17);
+        assertThat(challenge.getReward()).isEqualTo(17);
         assertThat(replacement.getStatus()).isEqualTo(ChallengeStatus.AVAILABLE);
     }
 
@@ -146,7 +146,7 @@ class ChallengeServiceTest {
         assertThatThrownBy(() -> challengeService.completeChallenge(
                 game.getId(),
                 challenge.getId(),
-                new FinishChallengeRequest(team.getId())))
+                new FinishChallengeRequest(team.getId(), null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Team has already attempted this challenge");
 
@@ -179,11 +179,12 @@ class ChallengeServiceTest {
         challenge.setId(id);
         challenge.setGame(game);
         challenge.setName("Challenge " + id);
-        challenge.setXCoordinate(1.0);
-        challenge.setYCoordinate(2.0);
-        challenge.setRewardChips(rewardChips);
+        challenge.setXCoordinate(1);
+        challenge.setYCoordinate(2);
+        challenge.setReward(rewardChips);
         challenge.setStatus(status);
         challenge.setDescription("Test challenge");
+        challenge.setChallengeType(ChallengeType.CHIPS);
         return challenge;
     }
 }
