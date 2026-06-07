@@ -1,0 +1,104 @@
+# Jetlag Tracker — Backend
+
+A Spring Boot REST API for tracking live game state in [Jet Lag: The Game](https://en.wikipedia.org/wiki/Jet_Lag:_The_Game) — specifically modelled on the [Taiwan: Rail Rush](https://jetlag.fandom.com/wiki/Taiwan:_Rail_Rush) season.
+
+## What is Jet Lag: The Game?
+
+Jet Lag is a travel competition show where two teams race to claim as many train stations as possible on a real map by visiting them and placing chips. Chips are earned by completing (or lost by failing) challenges distributed around the map. Stations can be stolen by placing more chips than the opposing team, but a team can only exceed their opponent by a maximum of 5 chips at a time.
+
+This backend tracks all of that state — which stations each team owns, how many chips they hold, which challenges are available, and a full action log — so that both teams always have an accurate picture of the current game, regardless of where they are.
+
+## Features
+
+- **Game presets** — load a pre-configured map (stations, coordinates, challenges) from a JSON file; includes a Taiwan Rail Rush preset
+- **Multi-team support** — any number of teams per game
+- **Station chip placement** — enforces the "exceed by at most 5" rule and deducts chips from the placing team's balance
+- **Challenge lifecycle** — challenges move through `CREATED → AVAILABLE → DONE`; when a challenge is resolved, replacement challenges are surfaced automatically
+- **Challenge types** — `CHIPS` (flat reward), `MULTIPLIER` (scales existing balance), `STEAL` (transfers chips from opponent)
+- **Action log** — append-only audit trail of every game event (chip placements, challenge outcomes, etc.)
+- **Game state endpoint** — single endpoint returning the complete current state: teams, stations, chip counts, and active challenges
+
+## Tech Stack
+
+- Java 25, Spring Boot 4
+- Spring Data JPA + PostgreSQL
+- Bean Validation (`jakarta.validation`)
+- Lombok
+- Maven
+
+## Getting Started
+
+### Prerequisites
+
+- Java 25+
+- PostgreSQL running locally on port 5432 with a database named `jetlag`
+
+### Configuration
+
+The application reads the database password from an environment variable. Set it before running:
+
+```powershell
+# PowerShell (current session)
+$env:DB_PASSWORD = "your_password"
+```
+
+Or permanently:
+
+```powershell
+[System.Environment]::SetEnvironmentVariable("DB_PASSWORD", "your_password", "User")
+```
+
+The database URL and username can be overridden the same way via `DB_URL` and `DB_USERNAME` if needed (see [application.properties](src/main/resources/application.properties)).
+
+### Run
+
+```bash
+./mvnw spring-boot:run
+```
+
+The API will be available at `http://localhost:8080`.
+
+## API Overview
+
+### Presets
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/presets` | List available game presets |
+
+### Games
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/games` | Create a game manually |
+| `POST` | `/games/from-preset` | Create a game from a preset |
+| `POST` | `/games/{gameId}/start` | Start a game |
+| `GET` | `/games` | List all games |
+| `GET` | `/games/{gameId}/state` | Full game state (teams, stations, challenges) |
+| `GET` | `/games/{gameId}/actions` | Action log |
+
+### Teams & Stations
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/games/{gameId}/teams` | Add a team |
+| `POST` | `/games/{gameId}/stations` | Add a station |
+| `POST` | `/games/{gameId}/stations/{stationId}/chips` | Place chips on a station |
+
+### Challenges
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/games/{gameId}/challenges` | Add a challenge |
+| `POST` | `/games/{gameId}/challenges/{challengeId}/complete` | Mark a challenge as completed by a team |
+| `POST` | `/games/{gameId}/challenges/{challengeId}/fail` | Mark a challenge as failed by a team |
+
+## Project Structure
+
+```
+src/main/java/com/nilskulawiak/jetlagtracker/
+├── game/          Game entity, lifecycle management, state aggregation
+├── team/          Team entity and chip balance management
+├── station/       Station entity and chip placement logic
+├── challenge/     Challenge entity, attempt tracking, reward mechanics
+├── action/        Append-only game action log
+├── preset/        JSON-based game preset loading
+├── config/        CORS configuration
+└── common/        Shared exception handling
+```
