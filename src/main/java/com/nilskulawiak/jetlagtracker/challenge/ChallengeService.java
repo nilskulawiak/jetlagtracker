@@ -149,8 +149,7 @@ public class ChallengeService {
         gameActionService.log(
                 game,
                 GameActionType.CHALLENGE_FAILED,
-                team.getName() + " completed " + challenge.getName()
-                        + " and gained " + challenge.getReward() + " chips"
+                team.getName() + " failed " + challenge.getName()
         );
 
         return ChallengeResponse.from(challenge);
@@ -184,31 +183,30 @@ public class ChallengeService {
         nextChallenge.setStatus(ChallengeStatus.AVAILABLE);
     }
 
-private void applyStealReward(
-        Challenge challenge,
-        Team team,
-        UUID enemyTeamId
-) {
+    private void applyStealReward(
+            Challenge challenge,
+            Team team,
+            UUID enemyTeamId
+    ) {
+        if (enemyTeamId == null) {
+            throw new IllegalArgumentException("Enemy team is required for steal challenges");
+        }
 
-    if (enemyTeamId == null) {
-        throw new IllegalArgumentException("Enemy team is required for steal challenges");
+        if (enemyTeamId.equals(team.getId())) {
+            throw new IllegalArgumentException("Team cannot steal from itself");
+        }
+
+        Team enemyTeam = teamRepository.findById(enemyTeamId)
+                .orElseThrow(() -> new IllegalArgumentException("Enemy team not found"));
+
+        if (!enemyTeam.getGame().getId().equals(team.getGame().getId())) {
+            throw new IllegalArgumentException("Enemy team does not belong to this game");
+        }
+
+        int stolenPercent = challenge.getReward();
+        int stolenAmount = enemyTeam.getAvailableChips() * stolenPercent / 100;
+
+        enemyTeam.setAvailableChips(enemyTeam.getAvailableChips() - stolenAmount);
+        team.setAvailableChips(team.getAvailableChips() + stolenAmount);
     }
-
-    if (enemyTeamId.equals(team.getId())) {
-        throw new IllegalArgumentException("Team cannot steal from itself");
-    }
-
-    Team enemyTeam = teamRepository.findById(enemyTeamId)
-            .orElseThrow(() -> new IllegalArgumentException("Enemy team not found"));
-
-    if (!enemyTeam.getGame().getId().equals(team.getGame().getId())) {
-        throw new IllegalArgumentException("Enemy team does not belong to this game");
-    }
-
-    int stolenPercent = challenge.getReward();
-    int stolenAmount = enemyTeam.getAvailableChips() * stolenPercent / 100;
-
-    enemyTeam.setAvailableChips(enemyTeam.getAvailableChips() - stolenAmount);
-    team.setAvailableChips(team.getAvailableChips() + stolenAmount);
-}
 }
