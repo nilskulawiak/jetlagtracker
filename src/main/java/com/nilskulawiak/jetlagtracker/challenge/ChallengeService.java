@@ -29,7 +29,7 @@ public class ChallengeService {
 
     public ChallengeResponse createChallenge(UUID gameId, CreateChallengeRequest request) {
         Game game = gameRepository.findById(gameId)
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
 
         Challenge challenge = new Challenge();
         challenge.setName(request.name());

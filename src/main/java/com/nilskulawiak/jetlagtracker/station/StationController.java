@@ -28,7 +28,7 @@ public class StationController {
 
     @PostMapping("{stationId}/chips")
     @ResponseStatus(HttpStatus.OK)
-    public StationChipStateResponse createTeam(@PathVariable UUID gameId, @PathVariable UUID stationId, @Valid @RequestBody AddChipsRequest request) {
+    public StationChipStateResponse addChipsToStation(@PathVariable UUID gameId, @PathVariable UUID stationId, @Valid @RequestBody AddChipsRequest request) {
         return stationService.addChipsToStation(gameId, stationId, request);
     }
 }

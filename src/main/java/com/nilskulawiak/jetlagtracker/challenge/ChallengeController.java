@@ -27,13 +27,13 @@ public class ChallengeController {
     }
 
     @PostMapping("{challengeId}/complete")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public ChallengeResponse completeChallenge(@PathVariable UUID gameId, @PathVariable UUID challengeId, @Valid @RequestBody FinishChallengeRequest request) {
         return challengeService.completeChallenge(gameId, challengeId, request);
     }
 
     @PostMapping("{challengeId}/fail")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public ChallengeResponse failChallenge(@PathVariable UUID gameId, @PathVariable UUID challengeId, @Valid @RequestBody FinishChallengeRequest request) {
         return challengeService.failChallenge(gameId, challengeId, request);
     }

@@ -26,7 +26,8 @@ public class StationService {
     private final GameActionService gameActionService;
 
     public StationResponse createStation(UUID gameId, CreateStationRequest request){
-        Game game = gameRepository.findById(gameId).orElseThrow();
+        Game game = gameRepository.findById(gameId)
+            .orElseThrow(() -> new IllegalArgumentException("Game not found"));
 
         Station station = new Station();
         station.setName(request.name());
@@ -46,9 +47,9 @@ public class StationService {
     
     @Transactional
     public StationChipStateResponse addChipsToStation(UUID gameId, UUID stationId, AddChipsRequest request){
-        Station station = stationRepository.findById(stationId).orElseThrow();
-        Team team = teamRepository.findById(request.teamId()).orElseThrow();
-        Game game = gameRepository.findById(gameId).orElseThrow();
+        Station station = stationRepository.findById(stationId).orElseThrow(() -> new IllegalArgumentException("Station not found"));
+        Team team = teamRepository.findById(request.teamId()).orElseThrow(() -> new IllegalArgumentException("Team not found"));
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Game not found"));
 
         if (game.getStatus() != GameStatus.STARTED){
             throw new IllegalArgumentException("Game has not yet started");
@@ -61,7 +62,6 @@ public class StationService {
         if (!team.getGame().getId().equals(gameId)) {
             throw new IllegalArgumentException("Team does not belong to this game");
         }
-        request.chips();
         if (team.getAvailableChips() < request.chips()){
             //Later negative route can be implemented
             throw new IllegalArgumentException(String.format("Team %s does not have enough chips", team.getName()));
