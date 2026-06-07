@@ -11,21 +11,8 @@
 	<groupId>com.nilskulawiak</groupId>
 	<artifactId>jetlagtracker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+	<name>jetlagtracker</name>
+	<description>REST API for tracking live game state in Jet Lag: The Game</description>
 	<properties>
 		<java.version>25</java.version>
 	</properties>
