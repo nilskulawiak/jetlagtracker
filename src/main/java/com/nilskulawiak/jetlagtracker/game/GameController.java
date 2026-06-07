@@ -33,6 +33,12 @@ public class GameController {
         return gameService.startGame(gameId, request);
     }
 
+    @PostMapping("{gameId}/finish")
+    @ResponseStatus(HttpStatus.OK)
+    public GameResponse finishGame(@PathVariable UUID gameId) {
+        return gameService.finishGame(gameId);
+    }
+
     @GetMapping("/{gameId}/state")
     public GameStateResponse getGameState(@PathVariable UUID gameId) {
         return gameService.getGameState(gameId);
