@@ -5,59 +5,116 @@
   "mapWidth": 953,
   "mapImage": "taiwan.png",
   "stations": [
-  { "name": "Nangang", "xCoordinate": 506, "yCoordinate": 209 },
-  { "name": "Taipei", "xCoordinate": 485, "yCoordinate": 223 },
-  { "name": "Banqiao", "xCoordinate": 473, "yCoordinate": 237 },
-  { "name": "Taoyuan", "xCoordinate": 414, "yCoordinate": 272 },
-  { "name": "Hsinchu", "xCoordinate": 381, "yCoordinate": 334 },
-  { "name": "Miaoli", "xCoordinate": 338, "yCoordinate": 402 },
-  { "name": "Taichung", "xCoordinate": 310, "yCoordinate": 524 },
-  { "name": "Changhua", "xCoordinate": 310, "yCoordinate": 574 },
-  { "name": "Yunlin", "xCoordinate": 278, "yCoordinate": 621 },
-  { "name": "Chiayi", "xCoordinate": 267, "yCoordinate": 686 },
-  { "name": "Tainan", "xCoordinate": 281, "yCoordinate": 791 },
-  { "name": "Zuoying", "xCoordinate": 296, "yCoordinate": 833 }
-],
+    { "name": "Nangang",   "xCoordinate": 477, "yCoordinate": 219 },
+    { "name": "Taipei",    "xCoordinate": 446, "yCoordinate": 235 },
+    { "name": "Banqiao",   "xCoordinate": 440, "yCoordinate": 244 },
+    { "name": "Taoyuan",   "xCoordinate": 413, "yCoordinate": 276 },
+    { "name": "Hsinchu",   "xCoordinate": 350, "yCoordinate": 356 },
+    { "name": "Miaoli",    "xCoordinate": 324, "yCoordinate": 420 },
+    { "name": "Taichung",  "xCoordinate": 304, "yCoordinate": 522 },
+    { "name": "Changhua",  "xCoordinate": 286, "yCoordinate": 559 },
+    { "name": "Yunlin",    "xCoordinate": 268, "yCoordinate": 637 },
+    { "name": "Chiayi",    "xCoordinate": 278, "yCoordinate": 666 },
+    { "name": "Tainan",    "xCoordinate": 256, "yCoordinate": 784 },
+    { "name": "Zuoying",   "xCoordinate": 274, "yCoordinate": 840 },
+    { "name": "Keelung",   "xCoordinate": 502, "yCoordinate": 200 },
+    { "name": "Ruifang",   "xCoordinate": 490, "yCoordinate": 204 },
+    { "name": "Fulong",    "xCoordinate": 553, "yCoordinate": 204 },
+    { "name": "Toucheng",  "xCoordinate": 511, "yCoordinate": 221 },
+    { "name": "Yilan",     "xCoordinate": 517, "yCoordinate": 232 },
+    { "name": "Suao",      "xCoordinate": 521, "yCoordinate": 231 },
+    { "name": "Dongao",   "xCoordinate": 616, "yCoordinate": 299 },
+    { "name": "Nanao",    "xCoordinate": 619, "yCoordinate": 312 },
+    { "name": "Xinma",    "xCoordinate": 617, "yCoordinate": 360 },
+    { "name": "Xincheng",  "xCoordinate": 588, "yCoordinate": 433 },
+    { "name": "Hualien",   "xCoordinate": 578, "yCoordinate": 454 },
+    { "name": "Shoufeng",  "xCoordinate": 577, "yCoordinate": 460 },
+    { "name": "Guangfu",   "xCoordinate": 541, "yCoordinate": 535 },
+    { "name": "Ruisui",    "xCoordinate": 530, "yCoordinate": 558 },
+    { "name": "Yuli",      "xCoordinate": 522, "yCoordinate": 594 },
+    { "name": "Chishang",  "xCoordinate": 514, "yCoordinate": 629 },
+    { "name": "Guanshan",  "xCoordinate": 498, "yCoordinate": 680 },
+    { "name": "Taitung",   "xCoordinate": 475, "yCoordinate": 712 },
+    { "name": "Zhiben",    "xCoordinate": 471, "yCoordinate": 727 },
+    { "name": "Taimali",  "xCoordinate": 465, "yCoordinate": 762 },
+    { "name": "Jinlun",   "xCoordinate": 440, "yCoordinate": 826 },
+    { "name": "Dawu",     "xCoordinate": 444, "yCoordinate": 828 },
+    { "name": "Fengshan",  "xCoordinate": 283, "yCoordinate": 839 },
+    { "name": "Pingtung",  "xCoordinate": 307, "yCoordinate": 827 },
+    { "name": "Fangliao",  "xCoordinate": 324, "yCoordinate": 853 }
+  ],
   "challenges": [
     {
-      "name": "Night Market Challenge",
-      "description": "Complete a local food challenge.",
+      "name": "Da'an Park Birdwatching",
+      "description": "One team member memorizes the 33 bird species listed on the Da'an Park sign. The other then photographs any bird in the park and presents it — the memorizer gets one guess to name it correctly.",
       "challengeType": "CHIPS",
-      "reward": 10,
-      "xCoordinate": 455,
-      "yCoordinate": 385
+      "reward": 30,
+      "xCoordinate": 448,
+      "yCoordinate": 245
     },
     {
-      "name": "Temple Photo Challenge",
-      "description": "Take a photo near a temple or landmark.",
+      "name": "Chrysanthemum Festival",
+      "description": "At the Shilin Residence Chrysanthemum Festival, without colluding, one team member photographs four art pieces each representing one of the four competitors. The other must correctly match each photo to a player.",
       "challengeType": "CHIPS",
-      "reward": 8,
-      "xCoordinate": 635,
-      "yCoordinate": 215
+      "reward": 50,
+      "xCoordinate": 460,
+      "yCoordinate": 224
     },
     {
-      "name": "Coastal Challenge",
-      "description": "Complete a task near the east coast.",
+      "name": "Tofu Rocks",
+      "description": "One team member has two minutes to memorize the only safe path across the Tofu Rocks on the northeast coast. A single wrong step means the challenge fails.",
+      "challengeType": "CHIPS",
+      "reward": 40,
+      "xCoordinate": 512,
+      "yCoordinate": 196
+    },
+    {
+      "name": "Jiaoxi Hot Springs Trivia",
+      "description": "Sitting in one of Jiaoxi's famous hot springs, one team member must correctly answer as many trivia questions as possible in 60 seconds. Call your shot beforehand — you earn 8 chips per correct answer.",
+      "challengeType": "CHIPS",
+      "reward": 40,
+      "xCoordinate": 520,
+      "yCoordinate": 228
+    },
+    {
+      "name": "Tectonic Plate Can Balance",
+      "description": "At the Pacific-Eurasian tectonic plate boundary near Xincheng, stack six standard cans while holding only the bottom one and carry the stack 60 metres from one plate to the other without dropping them.",
+      "challengeType": "CHIPS",
+      "reward": 30,
+      "xCoordinate": 600,
+      "yCoordinate": 438
+    },
+    {
+      "name": "Chun Shui Tang Bubble Tea",
+      "description": "At the Taichung teahouse where bubble tea was invented, blow tapioca balls through a straw at your partner, who must catch them in a cup. Call your shot — you earn 3 chips per boba caught, but miss your target and you earn nothing.",
       "challengeType": "STEAL",
       "reward": 25,
-      "xCoordinate": 720,
-      "yCoordinate": 505
+      "xCoordinate": 307,
+      "yCoordinate": 518
     },
     {
-      "name": "Southern City Challenge",
-      "description": "Complete a challenge in the south.",
-      "challengeType": "MULTIPLIER",
-      "reward": 50,
-      "xCoordinate": 345,
-      "yCoordinate": 815
-    },
-    {
-      "name": "Mountain Route Challenge",
-      "description": "Complete a task near the central route.",
+      "name": "McDonald's Secret Menu Taste Test",
+      "description": "Blindfolded, take exactly one bite of a secret Taiwan-exclusive McDonald's item. Correctly name it — without seeing the menu — to win the reward.",
       "challengeType": "CHIPS",
-      "reward": 15,
-      "xCoordinate": 485,
-      "yCoordinate": 520
+      "reward": 70,
+      "xCoordinate": 284,
+      "yCoordinate": 562
+    },
+    {
+      "name": "Spin-Top Champion",
+      "description": "Build your own spin-top from whatever materials you can find — no ready-made tops allowed. Get it spinning on its own for at least 30 seconds. You have up to five seconds of practice, then one official attempt.",
+      "challengeType": "CHIPS",
+      "reward": 50,
+      "xCoordinate": 258,
+      "yCoordinate": 788
+    },
+    {
+      "name": "Monkey Mountain",
+      "description": "Ascend Shoushan (Monkey Mountain) in Kaohsiung. Call your shot for how many Formosan macaques you will spot during the climb — you earn 2 chips per monkey if you hit your number, nothing if you fall short.",
+      "challengeType": "CHIPS",
+      "reward": 40,
+      "xCoordinate": 270,
+      "yCoordinate": 848
     }
   ]
 }
