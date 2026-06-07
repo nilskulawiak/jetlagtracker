@@ -154,52 +154,52 @@ public class GameService {
         return GamesResponse.from(games);
     }
 
-@Transactional
-public GameResponse createGameFromPreset(CreateGameFromPresetRequest request) {
-    GamePreset preset = gamePresetService.loadPreset(request.presetId());
+    @Transactional
+    public GameResponse createGameFromPreset(CreateGameFromPresetRequest request) {
+        GamePreset preset = gamePresetService.loadPreset(request.presetId());
 
-    Game game = new Game();
-    game.setName(request.name());
-    game.setMapImage(preset.mapImage());
-    game.setMapWidth(preset.mapWidth());
-    game.setMapHeight(preset.mapHeight());
-    game.setStatus(GameStatus.CREATED);
+        Game game = new Game();
+        game.setName(request.name());
+        game.setMapImage(preset.mapImage());
+        game.setMapWidth(preset.mapWidth());
+        game.setMapHeight(preset.mapHeight());
+        game.setStatus(GameStatus.CREATED);
 
-    gameRepository.save(game);
+        gameRepository.save(game);
 
-    for (CreateTeamRequest teamRequest : request.teams()) {
-        Team team = new Team();
-        team.setGame(game);
-        team.setName(teamRequest.name());
-        team.setColor(teamRequest.color());
-        team.setAvailableChips(teamRequest.startingChips());
-        teamRepository.save(team);
+        for (CreateTeamRequest teamRequest : request.teams()) {
+            Team team = new Team();
+            team.setGame(game);
+            team.setName(teamRequest.name());
+            team.setColor(teamRequest.color());
+            team.setAvailableChips(teamRequest.startingChips());
+            teamRepository.save(team);
+        }
+
+        for (StationPreset stationPreset : preset.stations()) {
+            Station station = new Station();
+            station.setGame(game);
+            station.setName(stationPreset.name());
+            station.setXCoordinate(stationPreset.xCoordinate());
+            station.setYCoordinate(stationPreset.yCoordinate());
+            stationRepository.save(station);
+        }
+
+        for (ChallengePreset challengePreset : preset.challenges()) {
+            Challenge challenge = new Challenge();
+            challenge.setGame(game);
+            challenge.setName(challengePreset.name());
+            challenge.setDescription(challengePreset.description());
+            challenge.setReward(challengePreset.reward());
+            challenge.setXCoordinate(challengePreset.xCoordinate());
+            challenge.setYCoordinate(challengePreset.yCoordinate());
+            challenge.setStatus(ChallengeStatus.CREATED);
+            challenge.setChallengeType(challengePreset.challengeType());
+            challengeRepository.save(challenge);
+        }
+
+        return GameResponse.from(game);
     }
-
-    for (StationPreset stationPreset : preset.stations()) {
-        Station station = new Station();
-        station.setGame(game);
-        station.setName(stationPreset.name());
-        station.setXCoordinate(stationPreset.xCoordinate());
-        station.setYCoordinate(stationPreset.yCoordinate());
-        stationRepository.save(station);
-    }
-
-    for (ChallengePreset challengePreset : preset.challenges()) {
-        Challenge challenge = new Challenge();
-        challenge.setGame(game);
-        challenge.setName(challengePreset.name());
-        challenge.setDescription(challengePreset.description());
-        challenge.setReward(challengePreset.reward());
-        challenge.setXCoordinate(challengePreset.xCoordinate());
-        challenge.setYCoordinate(challengePreset.yCoordinate());
-        challenge.setStatus(ChallengeStatus.CREATED);
-        challenge.setChallengeType(challengePreset.challengeType());
-        challengeRepository.save(challenge);
-    }
-
-    return GameResponse.from(game);
-}
 
     private Optional<Team> calculateStationOwner(Station station) {
         return stationChipStateRepository.findByStation(station)
