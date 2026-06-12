@@ -28,12 +28,30 @@ This backend tracks all of that state — which stations each team owns, how man
 
 ## Getting Started
 
-### Prerequisites
+Choose one of the two options below.
+
+### Option 1: Docker (recommended)
+
+No Java or PostgreSQL installation required. Create a `.env` file in the project root with a password of your choice:
+
+```
+DB_PASSWORD=yourpassword
+```
+
+Then:
+
+```bash
+docker compose up --build
+```
+
+### Option 2: Manual
+
+#### Prerequisites
 
 - Java 25+
 - PostgreSQL running locally on port 5432 with a database named `jetlag`
 
-### Configuration
+#### Configuration
 
 The application reads the database password from an environment variable. Set it before running:
 
@@ -48,13 +66,13 @@ Or permanently:
 [System.Environment]::SetEnvironmentVariable("DB_PASSWORD", "your_password", "User")
 ```
 
-The database URL and username can be overridden the same way via `DB_URL` and `DB_USERNAME` if needed (see [application.properties](src/main/resources/application.properties)).
-
-### Run
+#### Run
 
 ```bash
 ./mvnw spring-boot:run
 ```
+
+---
 
 The API will be available at `http://localhost:8080`.
 
