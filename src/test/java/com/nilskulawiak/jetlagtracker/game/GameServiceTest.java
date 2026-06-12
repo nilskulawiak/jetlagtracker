@@ -1,23 +1,21 @@
 package com.nilskulawiak.jetlagtracker.game;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.nilskulawiak.jetlagtracker.action.GameActionRepository;
 import com.nilskulawiak.jetlagtracker.action.GameActionService;
 import com.nilskulawiak.jetlagtracker.challenge.Challenge;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeRepository;
@@ -27,7 +25,6 @@ import com.nilskulawiak.jetlagtracker.preset.ChallengePreset;
 import com.nilskulawiak.jetlagtracker.preset.GamePreset;
 import com.nilskulawiak.jetlagtracker.preset.GamePresetService;
 import com.nilskulawiak.jetlagtracker.preset.StationPreset;
-import com.nilskulawiak.jetlagtracker.station.StationChipStateRepository;
 import com.nilskulawiak.jetlagtracker.station.StationRepository;
 import com.nilskulawiak.jetlagtracker.team.CreateTeamRequest;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
@@ -39,25 +36,11 @@ class GameServiceTest {
     @Mock private ChallengeRepository challengeRepository;
     @Mock private StationRepository stationRepository;
     @Mock private TeamRepository teamRepository;
-    @Mock private StationChipStateRepository stationChipStateRepository;
     @Mock private GameActionService gameActionService;
-    @Mock private GameActionRepository gameActionRepository;
     @Mock private GamePresetService gamePresetService;
 
+    @InjectMocks
     private GameService gameService;
-
-    @BeforeEach
-    void setUp() {
-        gameService = new GameService(
-                gameRepository,
-                challengeRepository,
-                stationRepository,
-                teamRepository,
-                stationChipStateRepository,
-                gameActionService,
-                gameActionRepository,
-                gamePresetService);
-    }
 
     @Test
     void createGameSavesGameAndLogsAction() {

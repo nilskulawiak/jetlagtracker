@@ -1,22 +1,20 @@
 package com.nilskulawiak.jetlagtracker.challenge;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.nilskulawiak.jetlagtracker.action.GameActionService;
 import com.nilskulawiak.jetlagtracker.game.Game;
 import com.nilskulawiak.jetlagtracker.game.GameRepository;
 import com.nilskulawiak.jetlagtracker.game.GameStatus;
@@ -38,20 +36,10 @@ class ChallengeServiceTest {
     @Mock
     private ChallengeAttemptRepository challengeAttemptRepository;
 
-    @Mock
-    private GameActionService gameActionService;
-
+    @InjectMocks
     private ChallengeService challengeService;
 
-    @BeforeEach
-    void setUp() {
-        challengeService = new ChallengeService(
-                challengeRepository,
-                gameRepository,
-                teamRepository,
-                challengeAttemptRepository,
-                gameActionService);
-    }
+
 
     @Test
     void completeChallengeRewardsTeamMarksDoneAndMakesReplacementAvailable() {
