@@ -1,19 +1,18 @@
 package com.nilskulawiak.jetlagtracker.challenge;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.nilskulawiak.jetlagtracker.action.GameActionService;
@@ -39,19 +38,104 @@ class ChallengeServiceTest {
     private ChallengeAttemptRepository challengeAttemptRepository;
 
     @Mock
+    @SuppressWarnings("unused")
     private GameActionService gameActionService;
 
+    @InjectMocks
     private ChallengeService challengeService;
 
-    @BeforeEach
-    void setUp() {
-        challengeService = new ChallengeService(
-                challengeRepository,
-                gameRepository,
-                teamRepository,
-                challengeAttemptRepository,
-                gameActionService);
+    // --- startChallenge ---
+
+    @Test
+    void startChallengeCreatesInProgressAttempt() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 10);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.empty());
+
+        challengeService.startChallenge(game.getId(), challenge.getId(), new StartChallengeRequest(team.getId(), null));
+
+        ArgumentCaptor<ChallengeAttempt> captor = ArgumentCaptor.forClass(ChallengeAttempt.class);
+        verify(challengeAttemptRepository).save(captor.capture());
+        assertThat(captor.getValue().getStatus()).isEqualTo(ChallengeAttemptStatus.IN_PROGRESS);
+        assertThat(captor.getValue().getCallShot()).isNull();
     }
+
+    @Test
+    void startChallengeStoresCallShotOnAttemptForCallYourShot() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 5);
+        challenge.setChallengeType(ChallengeType.CALL_YOUR_SHOT);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.empty());
+
+        challengeService.startChallenge(game.getId(), challenge.getId(), new StartChallengeRequest(team.getId(), 4));
+
+        ArgumentCaptor<ChallengeAttempt> captor = ArgumentCaptor.forClass(ChallengeAttempt.class);
+        verify(challengeAttemptRepository).save(captor.capture());
+        assertThat(captor.getValue().getCallShot()).isEqualTo(4);
+    }
+
+    @Test
+    void startChallengeThrowsWhenChallengeNotAvailable() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.DONE, 10);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+
+        assertThatThrownBy(() -> challengeService.startChallenge(
+                game.getId(), challenge.getId(), new StartChallengeRequest(team.getId(), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Challenge not available");
+    }
+
+    @Test
+    void startChallengeThrowsWhenGameNotStarted() {
+        Game game = gameWithId(UUID.randomUUID());
+        game.setStatus(GameStatus.CREATED);
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 10);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+
+        assertThatThrownBy(() -> challengeService.startChallenge(
+                game.getId(), challenge.getId(), new StartChallengeRequest(team.getId(), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Game has not yet started");
+    }
+
+    @Test
+    void startChallengeThrowsWhenTeamAlreadyStarted() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 10);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team))
+                .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
+
+        assertThatThrownBy(() -> challengeService.startChallenge(
+                game.getId(), challenge.getId(), new StartChallengeRequest(team.getId(), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Team has already started this challenge");
+    }
+
+    // --- completeChallenge ---
 
     @Test
     void completeChallengeRewardsTeamMarksDoneAndMakesReplacementAvailable() {
@@ -62,26 +146,230 @@ class ChallengeServiceTest {
 
         when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
         when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
-        when(challengeAttemptRepository.existsByChallengeAndTeam(challenge, team)).thenReturn(false);
-        when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of(replacement));
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team))
+                .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
+        when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of(replacement));
 
         ChallengeResponse response = challengeService.completeChallenge(
-                game.getId(),
-                challenge.getId(),
-                new FinishChallengeRequest(team.getId(), null));
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null));
 
         assertThat(response.status()).isEqualTo(ChallengeStatus.DONE);
-        assertThat(challenge.getStatus()).isEqualTo(ChallengeStatus.DONE);
         assertThat(replacement.getStatus()).isEqualTo(ChallengeStatus.AVAILABLE);
         assertThat(team.getAvailableChips()).isEqualTo(40);
-
-        ArgumentCaptor<ChallengeAttempt> attemptCaptor = ArgumentCaptor.forClass(ChallengeAttempt.class);
-        verify(challengeAttemptRepository).save(attemptCaptor.capture());
-        assertThat(attemptCaptor.getValue().getChallenge()).isSameAs(challenge);
-        assertThat(attemptCaptor.getValue().getTeam()).isSameAs(team);
-        assertThat(attemptCaptor.getValue().isSuccess()).isTrue();
     }
+
+    @Test
+    void completeChallengeAppliesMultiplierToTeamChips() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        team.setAvailableChips(100);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 150);
+        challenge.setChallengeType(ChallengeType.MULTIPLIER);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team))
+                .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
+        when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of());
+
+        challengeService.completeChallenge(game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null));
+
+        assertThat(team.getAvailableChips()).isEqualTo(150);
+    }
+
+    @Test
+    void completeChallengeTransfersChipsFromEnemyOnSteal() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Team enemy = teamWithId(UUID.randomUUID(), game);
+        enemy.setAvailableChips(100);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 30);
+        challenge.setChallengeType(ChallengeType.STEAL);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(teamRepository.findById(enemy.getId())).thenReturn(Optional.of(enemy));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team))
+                .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
+        when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of());
+
+        challengeService.completeChallenge(game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), enemy.getId()));
+
+        assertThat(enemy.getAvailableChips()).isEqualTo(70);
+        assertThat(team.getAvailableChips()).isEqualTo(30);
+    }
+
+    @Test
+    void completeChallengeAwardsCallShotTimesRewardOnCallYourShot() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 5);
+        challenge.setChallengeType(ChallengeType.CALL_YOUR_SHOT);
+        ChallengeAttempt attempt = inProgressAttempt(challenge, team);
+        attempt.setCallShot(3);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.of(attempt));
+        when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of());
+
+        challengeService.completeChallenge(game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null));
+
+        assertThat(team.getAvailableChips()).isEqualTo(15); // 3 * 5
+    }
+
+    @Test
+    void completeChallengeThrowsWhenTeamHasNotStartedChallenge() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 10);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> challengeService.completeChallenge(
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Team has not started this challenge");
+    }
+
+    @Test
+    void completeChallengeThrowsWhenTeamHasAlreadyResolved() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 10);
+        ChallengeAttempt attempt = inProgressAttempt(challenge, team);
+        attempt.setStatus(ChallengeAttemptStatus.SUCCESS);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.of(attempt));
+
+        assertThatThrownBy(() -> challengeService.completeChallenge(
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Team has already resolved this challenge");
+    }
+
+    @Test
+    void completeChallengeThrowsWhenChallengeNotAvailable() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.DONE, 10);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+
+        assertThatThrownBy(() -> challengeService.completeChallenge(
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Challenge not available");
+    }
+
+    @Test
+    void completeChallengeThrowsWhenGameNotStarted() {
+        Game game = gameWithId(UUID.randomUUID());
+        game.setStatus(GameStatus.CREATED);
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 10);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+
+        assertThatThrownBy(() -> challengeService.completeChallenge(
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Game has not yet started");
+    }
+
+    @Test
+    void completeChallengeThrowsWhenEnemyTeamIdMissingForSteal() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 30);
+        challenge.setChallengeType(ChallengeType.STEAL);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team))
+                .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
+
+        assertThatThrownBy(() -> challengeService.completeChallenge(
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Enemy team is required for steal challenges");
+    }
+
+    @Test
+    void completeChallengeThrowsWhenStealingFromSelf() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 30);
+        challenge.setChallengeType(ChallengeType.STEAL);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team))
+                .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
+
+        assertThatThrownBy(() -> challengeService.completeChallenge(
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), team.getId())))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Team cannot steal from itself");
+    }
+
+    @Test
+    void completeChallengeThrowsWhenCallShotMissingForCallYourShot() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 5);
+        challenge.setChallengeType(ChallengeType.CALL_YOUR_SHOT);
+        ChallengeAttempt attempt = inProgressAttempt(challenge, team);
+        attempt.setCallShot(null);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.of(attempt));
+
+        assertThatThrownBy(() -> challengeService.completeChallenge(
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("callShot must be a positive number for call-your-shot challenges");
+    }
+
+    @Test
+    void completeChallengeThrowsWhenCallShotIsZeroForCallYourShot() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 5);
+        challenge.setChallengeType(ChallengeType.CALL_YOUR_SHOT);
+        ChallengeAttempt attempt = inProgressAttempt(challenge, team);
+        attempt.setCallShot(0);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.of(attempt));
+
+        assertThatThrownBy(() -> challengeService.completeChallenge(
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("callShot must be a positive number for call-your-shot challenges");
+    }
+
+    // --- failChallenge ---
 
     @Test
     void failChallengeLeavesChallengeAvailableWhenOtherTeamsCanStillAttempt() {
@@ -91,18 +379,16 @@ class ChallengeServiceTest {
 
         when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
         when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
-        when(challengeAttemptRepository.existsByChallengeAndTeam(challenge, team)).thenReturn(false);
-        when(teamRepository.countByGame(game)).thenReturn(2L);
-        when(challengeAttemptRepository.countByChallengeAndSuccessFalse(challenge)).thenReturn(1L);
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team))
+                .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
+        when(teamRepository.countByGame(game)).thenReturn(2L);
+        when(challengeAttemptRepository.countByChallengeAndStatus(challenge, ChallengeAttemptStatus.FAILED)).thenReturn(1L);
 
         ChallengeResponse response = challengeService.failChallenge(
-                game.getId(),
-                challenge.getId(),
-                new FinishChallengeRequest(team.getId(), null));
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null));
 
         assertThat(response.status()).isEqualTo(ChallengeStatus.AVAILABLE);
-        assertThat(challenge.getStatus()).isEqualTo(ChallengeStatus.AVAILABLE);
         assertThat(challenge.getReward()).isEqualTo(15);
     }
 
@@ -115,43 +401,84 @@ class ChallengeServiceTest {
 
         when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
         when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
-        when(challengeAttemptRepository.existsByChallengeAndTeam(challenge, team)).thenReturn(false);
-        when(teamRepository.countByGame(game)).thenReturn(2L);
-        when(challengeAttemptRepository.countByChallengeAndSuccessFalse(challenge)).thenReturn(2L);
-        when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of(replacement));
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team))
+                .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
+        when(teamRepository.countByGame(game)).thenReturn(2L);
+        when(challengeAttemptRepository.countByChallengeAndStatus(challenge, ChallengeAttemptStatus.FAILED)).thenReturn(2L);
+        when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of(replacement));
 
         ChallengeResponse response = challengeService.failChallenge(
-                game.getId(),
-                challenge.getId(),
-                new FinishChallengeRequest(team.getId(), null));
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null));
 
         assertThat(response.status()).isEqualTo(ChallengeStatus.DONE);
-        assertThat(challenge.getStatus()).isEqualTo(ChallengeStatus.DONE);
         assertThat(challenge.getReward()).isEqualTo(17);
         assertThat(replacement.getStatus()).isEqualTo(ChallengeStatus.AVAILABLE);
     }
 
     @Test
-    void completeChallengeRejectsDuplicateAttempt() {
+    void failChallengeThrowsWhenTeamHasNotStartedChallenge() {
         Game game = gameWithId(UUID.randomUUID());
         Team team = teamWithId(UUID.randomUUID(), game);
         Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 10);
 
         when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
         when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
-        when(challengeAttemptRepository.existsByChallengeAndTeam(challenge, team)).thenReturn(true);
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> challengeService.failChallenge(
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Team has not started this challenge");
+    }
+
+    @Test
+    void failChallengeThrowsWhenChallengeNotAvailable() {
+        Game game = gameWithId(UUID.randomUUID());
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.DONE, 10);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
 
-        assertThatThrownBy(() -> challengeService.completeChallenge(
-                game.getId(),
-                challenge.getId(),
-                new FinishChallengeRequest(team.getId(), null)))
+        assertThatThrownBy(() -> challengeService.failChallenge(
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Team has already attempted this challenge");
-
-        verify(challengeAttemptRepository).existsByChallengeAndTeam(challenge, team);
+                .hasMessage("Challenge not available");
     }
+
+    @Test
+    void failChallengeThrowsWhenGameNotStarted() {
+        Game game = gameWithId(UUID.randomUUID());
+        game.setStatus(GameStatus.CREATED);
+        Team team = teamWithId(UUID.randomUUID(), game);
+        Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 10);
+
+        when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
+        when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+
+        assertThatThrownBy(() -> challengeService.failChallenge(
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Game has not yet started");
+    }
+
+    @Test
+    void createChallengeThrowsWhenGameAlreadyStarted() {
+        Game game = gameWithId(UUID.randomUUID());
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+
+        assertThatThrownBy(() -> challengeService.createChallenge(
+                game.getId(),
+                new CreateChallengeRequest("Sprint", 10, 20, 15, null, "Run fast", ChallengeType.CHIPS)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Challenges can only be created before the game starts");
+    }
+
+    // --- helpers ---
 
     private static Game gameWithId(UUID id) {
         Game game = new Game();
@@ -186,5 +513,13 @@ class ChallengeServiceTest {
         challenge.setDescription("Test challenge");
         challenge.setChallengeType(ChallengeType.CHIPS);
         return challenge;
+    }
+
+    private static ChallengeAttempt inProgressAttempt(Challenge challenge, Team team) {
+        ChallengeAttempt attempt = new ChallengeAttempt();
+        attempt.setChallenge(challenge);
+        attempt.setTeam(team);
+        attempt.setStatus(ChallengeAttemptStatus.IN_PROGRESS);
+        return attempt;
     }
 }

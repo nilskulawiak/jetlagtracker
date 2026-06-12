@@ -29,6 +29,10 @@ public class StationService {
         Game game = gameRepository.findById(gameId)
             .orElseThrow(() -> new IllegalArgumentException("Game not found"));
 
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Stations can only be created before the game starts");
+        }
+
         Station station = new Station();
         station.setName(request.name());
         station.setXCoordinate(request.xCoordinate());
@@ -109,6 +113,47 @@ public class StationService {
 
         StationChipState savedState = stationChipStateRepository.save(state);
         return StationChipStateResponse.from(savedState);
+    }
+
+    public void deleteStation(UUID gameId, UUID stationId) {
+        Station station = stationRepository.findById(stationId)
+                .orElseThrow(() -> new IllegalArgumentException("Station not found"));
+
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        if (!station.getGame().getId().equals(gameId)) {
+            throw new IllegalArgumentException("Station does not belong to this game");
+        }
+
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Stations can only be deleted before the game starts");
+        }
+
+        stationChipStateRepository.deleteByStation(station);
+        stationRepository.delete(station);
+    }
+
+    public StationResponse patchStation(UUID gameId, UUID stationId, PatchStationRequest request) {
+        Station station = stationRepository.findById(stationId)
+                .orElseThrow(() -> new IllegalArgumentException("Station not found"));
+
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        if (!station.getGame().getId().equals(gameId)) {
+            throw new IllegalArgumentException("Station does not belong to this game");
+        }
+
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Stations can only be updated before the game starts");
+        }
+
+        if (request.name() != null) station.setName(request.name());
+        if (request.xCoordinate() != null) station.setXCoordinate(request.xCoordinate());
+        if (request.yCoordinate() != null) station.setYCoordinate(request.yCoordinate());
+
+        return StationResponse.from(stationRepository.save(station));
     }
 
     private int getMaximumOpponentChips(

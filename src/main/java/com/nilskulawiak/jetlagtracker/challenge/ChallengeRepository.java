@@ -11,4 +11,6 @@ public interface ChallengeRepository extends JpaRepository<Challenge, UUID> {
     List<Challenge> findByGame(Game game);
 
     List<Challenge> findByGameAndStatus(Game game, ChallengeStatus status);
+
+    void deleteByGame(Game game);
 }

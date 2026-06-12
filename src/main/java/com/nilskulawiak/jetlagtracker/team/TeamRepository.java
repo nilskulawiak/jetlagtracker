@@ -11,4 +11,6 @@ public interface TeamRepository extends JpaRepository<Team, UUID> {
     long countByGame(Game game);
 
     List<Team> findByGame(Game game);
+
+    void deleteByGame(Game game);
 }

@@ -1,5 +1,6 @@
 package com.nilskulawiak.jetlagtracker.game;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.nilskulawiak.jetlagtracker.action.GameActionResponse;
 import com.nilskulawiak.jetlagtracker.action.GameActionService;
 import com.nilskulawiak.jetlagtracker.action.GameActionType;
 import com.nilskulawiak.jetlagtracker.challenge.Challenge;
+import com.nilskulawiak.jetlagtracker.challenge.ChallengeAttemptRepository;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeRepository;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeResponse;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeStatus;
@@ -41,6 +43,7 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final ChallengeRepository challengeRepository;
+    private final ChallengeAttemptRepository challengeAttemptRepository;
     private final StationRepository stationRepository;
     private final TeamRepository teamRepository;
     private final StationChipStateRepository stationChipStateRepository;
@@ -70,6 +73,11 @@ public class GameService {
     public GameResponse startGame(UUID gameId, StartGameRequest request){
         Game game = gameRepository.findById(gameId)
             .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Game cannot be started in status: " + game.getStatus());
+        }
+
         List<Challenge> createdChallenges = challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED);
 
         if (createdChallenges.size() < request.numberOfChallenges()) {
@@ -80,8 +88,9 @@ public class GameService {
 
         game.setStatus(GameStatus.STARTED);
 
-        Collections.shuffle(createdChallenges);
-        createdChallenges.stream().limit(request.numberOfChallenges()).forEach(challenge -> challenge.setStatus(ChallengeStatus.AVAILABLE));
+        List<Challenge> shuffled = new ArrayList<>(createdChallenges);
+        Collections.shuffle(shuffled);
+        shuffled.stream().limit(request.numberOfChallenges()).forEach(challenge -> challenge.setStatus(ChallengeStatus.AVAILABLE));
 
         gameActionService.log(
                 game,
@@ -96,6 +105,10 @@ public class GameService {
     public GameResponse finishGame(UUID gameId){
         Game game = gameRepository.findById(gameId)
             .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        if (game.getStatus() != GameStatus.STARTED) {
+            throw new IllegalArgumentException("Game cannot be finished in status: " + game.getStatus());
+        }
 
         game.setStatus(GameStatus.DONE);
 
@@ -123,7 +136,7 @@ public class GameService {
                     List<StationChipState> chipStates =
                             stationChipStateRepository.findByStation(station);
 
-                    UUID ownerTeamId = calculateStationOwner(station)
+                    UUID ownerTeamId = calculateStationOwner(chipStates)
                             .map(Team::getId)
                             .orElse(null);
 
@@ -149,6 +162,37 @@ public class GameService {
         );
     }
 
+    @Transactional
+    public void deleteGame(UUID gameId) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        gameActionRepository.deleteByGame(game);
+        challengeRepository.findByGame(game).forEach(challengeAttemptRepository::deleteByChallenge);
+        challengeRepository.deleteByGame(game);
+        stationRepository.findByGame(game).forEach(stationChipStateRepository::deleteByStation);
+        stationRepository.deleteByGame(game);
+        teamRepository.deleteByGame(game);
+        gameRepository.delete(game);
+    }
+
+    @Transactional
+    public GameResponse patchGame(UUID gameId, PatchGameRequest request) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Games can only be updated before they start");
+        }
+
+        if (request.name() != null) game.setName(request.name());
+        if (request.mapWidth() != null) game.setMapWidth(request.mapWidth());
+        if (request.mapHeight() != null) game.setMapHeight(request.mapHeight());
+        if (request.mapImage() != null) game.setMapImage(request.mapImage());
+
+        return GameResponse.from(game);
+    }
+
     public GamesResponse getGames(){
         List<Game> games = gameRepository.findAll();
         return GamesResponse.from(games);
@@ -166,6 +210,12 @@ public class GameService {
         game.setStatus(GameStatus.CREATED);
 
         gameRepository.save(game);
+
+        gameActionService.log(
+                game,
+                GameActionType.GAME_CREATED,
+                game.getName() + " was created"
+        );
 
         for (CreateTeamRequest teamRequest : request.teams()) {
             Team team = new Team();
@@ -201,10 +251,9 @@ public class GameService {
         return GameResponse.from(game);
     }
 
-    private Optional<Team> calculateStationOwner(Station station) {
-        return stationChipStateRepository.findByStation(station)
-                .stream()
+    private Optional<Team> calculateStationOwner(List<StationChipState> chipStates) {
+        return chipStates.stream()
                 .max(Comparator.comparingInt(StationChipState::getChips))
                 .map(StationChipState::getTeam);
-        }
+    }
 }

@@ -7,6 +7,8 @@ import com.nilskulawiak.jetlagtracker.team.Team;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -35,8 +37,11 @@ public class ChallengeAttempt {
     @ManyToOne(optional = false)
     private Team team;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private boolean success;
+    private ChallengeAttemptStatus status;
+
+    private Integer callShot;
 
     @Column(nullable = false)
     private Instant attemptedAt = Instant.now();

@@ -13,8 +13,8 @@ This backend tracks all of that state — which stations each team owns, how man
 - **Game presets** — load a pre-configured map (stations, coordinates, challenges) from a JSON file; includes a Taiwan Rail Rush preset
 - **Multi-team support** — any number of teams per game
 - **Station chip placement** — enforces the "exceed by at most 5" rule and deducts chips from the placing team's balance
-- **Challenge lifecycle** — challenges move through `CREATED → AVAILABLE → DONE`; when a challenge is resolved, replacement challenges are surfaced automatically
-- **Challenge types** — `CHIPS` (flat reward), `MULTIPLIER` (scales existing balance), `STEAL` (transfers chips from opponent)
+- **Challenge lifecycle** — challenges move through `CREATED → AVAILABLE → DONE`; a team must explicitly start a challenge before completing or failing it; when a challenge is resolved, replacement challenges are surfaced automatically
+- **Challenge types** — `CHIPS` (flat reward), `MULTIPLIER` (scales existing balance), `STEAL` (transfers chips from opponent), `CALL_YOUR_SHOT` (team declares a count upfront at start time; earns `call × reward` chips if they meet it, nothing otherwise)
 - **Action log** — append-only audit trail of every game event (chip placements, challenge outcomes, etc.)
 - **Game state endpoint** — single endpoint returning the complete current state: teams, stations, chip counts, and active challenges
 
@@ -28,12 +28,30 @@ This backend tracks all of that state — which stations each team owns, how man
 
 ## Getting Started
 
-### Prerequisites
+Choose one of the two options below.
+
+### Option 1: Docker (recommended)
+
+No Java or PostgreSQL installation required. Create a `.env` file in the project root with a password of your choice:
+
+```
+DB_PASSWORD=yourpassword
+```
+
+Then:
+
+```bash
+docker compose up --build
+```
+
+### Option 2: Manual
+
+#### Prerequisites
 
 - Java 25+
 - PostgreSQL running locally on port 5432 with a database named `jetlag`
 
-### Configuration
+#### Configuration
 
 The application reads the database password from an environment variable. Set it before running:
 
@@ -48,13 +66,13 @@ Or permanently:
 [System.Environment]::SetEnvironmentVariable("DB_PASSWORD", "your_password", "User")
 ```
 
-The database URL and username can be overridden the same way via `DB_URL` and `DB_USERNAME` if needed (see [application.properties](src/main/resources/application.properties)).
-
-### Run
+#### Run
 
 ```bash
 ./mvnw spring-boot:run
 ```
+
+---
 
 The API will be available at `http://localhost:8080`.
 
@@ -71,23 +89,36 @@ The API will be available at `http://localhost:8080`.
 | `POST` | `/games` | Create a game manually |
 | `POST` | `/games/from-preset` | Create a game from a preset |
 | `POST` | `/games/{gameId}/start` | Start a game |
+| `PATCH` | `/games/{gameId}` | Update game settings |
+| `DELETE` | `/games/{gameId}` | Delete a game and all its data |
 | `GET` | `/games` | List all games |
 | `GET` | `/games/{gameId}/state` | Full game state (teams, stations, challenges) |
 | `GET` | `/games/{gameId}/actions` | Action log |
 
-### Teams & Stations
+### Teams
 | Method | Path | Description |
 |--------|------|-------------|
 | `POST` | `/games/{gameId}/teams` | Add a team |
+| `PATCH` | `/games/{gameId}/teams/{teamId}` | Update a team |
+| `DELETE` | `/games/{gameId}/teams/{teamId}` | Delete a team |
+
+### Stations
+| Method | Path | Description |
+|--------|------|-------------|
 | `POST` | `/games/{gameId}/stations` | Add a station |
+| `PATCH` | `/games/{gameId}/stations/{stationId}` | Update a station |
+| `DELETE` | `/games/{gameId}/stations/{stationId}` | Delete a station |
 | `POST` | `/games/{gameId}/stations/{stationId}/chips` | Place chips on a station |
 
 ### Challenges
 | Method | Path | Description |
 |--------|------|-------------|
 | `POST` | `/games/{gameId}/challenges` | Add a challenge |
-| `POST` | `/games/{gameId}/challenges/{challengeId}/complete` | Mark a challenge as completed by a team |
-| `POST` | `/games/{gameId}/challenges/{challengeId}/fail` | Mark a challenge as failed by a team |
+| `PATCH` | `/games/{gameId}/challenges/{challengeId}` | Update a challenge |
+| `DELETE` | `/games/{gameId}/challenges/{challengeId}` | Delete a challenge |
+| `POST` | `/games/{gameId}/challenges/{challengeId}/start` | Start a challenge (locks in `callShot` for `CALL_YOUR_SHOT` type) |
+| `POST` | `/games/{gameId}/challenges/{challengeId}/complete` | Mark a started challenge as completed by a team |
+| `POST` | `/games/{gameId}/challenges/{challengeId}/fail` | Mark a started challenge as failed by a team |
 
 ## Project Structure
 
