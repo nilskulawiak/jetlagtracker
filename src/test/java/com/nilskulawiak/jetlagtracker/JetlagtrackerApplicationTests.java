@@ -13,6 +13,7 @@ class JetlagtrackerApplicationTests {
 
 	@Container
 	@ServiceConnection
+    @SuppressWarnings("unused")
 	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18");
 
 	@Test
