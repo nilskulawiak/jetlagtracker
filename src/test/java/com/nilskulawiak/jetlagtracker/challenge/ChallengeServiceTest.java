@@ -146,6 +146,18 @@ class ChallengeServiceTest {
         verify(challengeAttemptRepository).existsByChallengeAndTeam(challenge, team);
     }
 
+    @Test
+    void createChallengeThrowsWhenGameAlreadyStarted() {
+        Game game = gameWithId(UUID.randomUUID());
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+
+        assertThatThrownBy(() -> challengeService.createChallenge(
+                game.getId(),
+                new CreateChallengeRequest("Sprint", 10, 20, 15, null, "Run fast", ChallengeType.CHIPS)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Challenges can only be created before the game starts");
+    }
+
     private static Game gameWithId(UUID id) {
         Game game = new Game();
         game.setId(id);
