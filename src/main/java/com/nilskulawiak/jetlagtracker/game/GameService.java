@@ -1,5 +1,6 @@
 package com.nilskulawiak.jetlagtracker.game;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -70,6 +71,11 @@ public class GameService {
     public GameResponse startGame(UUID gameId, StartGameRequest request){
         Game game = gameRepository.findById(gameId)
             .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Game cannot be started in status: " + game.getStatus());
+        }
+
         List<Challenge> createdChallenges = challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED);
 
         if (createdChallenges.size() < request.numberOfChallenges()) {
@@ -80,8 +86,9 @@ public class GameService {
 
         game.setStatus(GameStatus.STARTED);
 
-        Collections.shuffle(createdChallenges);
-        createdChallenges.stream().limit(request.numberOfChallenges()).forEach(challenge -> challenge.setStatus(ChallengeStatus.AVAILABLE));
+        List<Challenge> shuffled = new ArrayList<>(createdChallenges);
+        Collections.shuffle(shuffled);
+        shuffled.stream().limit(request.numberOfChallenges()).forEach(challenge -> challenge.setStatus(ChallengeStatus.AVAILABLE));
 
         gameActionService.log(
                 game,
@@ -96,6 +103,10 @@ public class GameService {
     public GameResponse finishGame(UUID gameId){
         Game game = gameRepository.findById(gameId)
             .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        if (game.getStatus() != GameStatus.STARTED) {
+            throw new IllegalArgumentException("Game cannot be finished in status: " + game.getStatus());
+        }
 
         game.setStatus(GameStatus.DONE);
 
@@ -123,7 +134,7 @@ public class GameService {
                     List<StationChipState> chipStates =
                             stationChipStateRepository.findByStation(station);
 
-                    UUID ownerTeamId = calculateStationOwner(station)
+                    UUID ownerTeamId = calculateStationOwner(chipStates)
                             .map(Team::getId)
                             .orElse(null);
 
@@ -167,6 +178,12 @@ public GameResponse createGameFromPreset(CreateGameFromPresetRequest request) {
 
     gameRepository.save(game);
 
+    gameActionService.log(
+            game,
+            GameActionType.GAME_CREATED,
+            game.getName() + " was created"
+    );
+
     for (CreateTeamRequest teamRequest : request.teams()) {
         Team team = new Team();
         team.setGame(game);
@@ -201,10 +218,9 @@ public GameResponse createGameFromPreset(CreateGameFromPresetRequest request) {
     return GameResponse.from(game);
 }
 
-    private Optional<Team> calculateStationOwner(Station station) {
-        return stationChipStateRepository.findByStation(station)
-                .stream()
+    private Optional<Team> calculateStationOwner(List<StationChipState> chipStates) {
+        return chipStates.stream()
                 .max(Comparator.comparingInt(StationChipState::getChips))
                 .map(StationChipState::getTeam);
-        }
+    }
 }

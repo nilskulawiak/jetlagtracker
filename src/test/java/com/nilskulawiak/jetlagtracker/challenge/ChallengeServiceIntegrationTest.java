@@ -1,13 +1,16 @@
 package com.nilskulawiak.jetlagtracker.challenge;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.nilskulawiak.jetlagtracker.game.Game;
 import com.nilskulawiak.jetlagtracker.game.GameRepository;
@@ -16,8 +19,14 @@ import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
 
 @SpringBootTest
+@Testcontainers
 @Transactional
 class ChallengeServiceIntegrationTest {
+
+    @Container
+    @ServiceConnection
+    @SuppressWarnings("unused")
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18");
 
     @Autowired
     private ChallengeService challengeService;
@@ -105,6 +114,7 @@ class ChallengeServiceIntegrationTest {
         challenge.setReward(rewardChips);
         challenge.setStatus(status);
         challenge.setDescription("Integration test challenge");
+        challenge.setChallengeType(ChallengeType.CHIPS);
         return challenge;
     }
 }

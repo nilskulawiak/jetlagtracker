@@ -29,6 +29,10 @@ public class StationService {
         Game game = gameRepository.findById(gameId)
             .orElseThrow(() -> new IllegalArgumentException("Game not found"));
 
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Stations can only be created before the game starts");
+        }
+
         Station station = new Station();
         station.setName(request.name());
         station.setXCoordinate(request.xCoordinate());

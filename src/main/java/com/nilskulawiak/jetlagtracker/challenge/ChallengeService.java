@@ -31,6 +31,10 @@ public class ChallengeService {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("Game not found"));
 
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Challenges can only be created before the game starts");
+        }
+
         Challenge challenge = new Challenge();
         challenge.setName(request.name());
         challenge.setXCoordinate(request.xCoordinate());
@@ -149,8 +153,7 @@ public class ChallengeService {
         gameActionService.log(
                 game,
                 GameActionType.CHALLENGE_FAILED,
-                team.getName() + " completed " + challenge.getName()
-                        + " and gained " + challenge.getReward() + " chips"
+                team.getName() + " failed " + challenge.getName()
         );
 
         return ChallengeResponse.from(challenge);
