@@ -3,6 +3,8 @@ package com.nilskulawiak.jetlagtracker.challenge;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +26,17 @@ public class ChallengeController {
     @ResponseStatus(HttpStatus.CREATED)
     public ChallengeResponse createChallenge(@PathVariable UUID gameId, @Valid @RequestBody CreateChallengeRequest request) {
         return challengeService.createChallenge(gameId, request);
+    }
+
+    @DeleteMapping("{challengeId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteChallenge(@PathVariable UUID gameId, @PathVariable UUID challengeId) {
+        challengeService.deleteChallenge(gameId, challengeId);
+    }
+
+    @PatchMapping("{challengeId}")
+    public ChallengeResponse patchChallenge(@PathVariable UUID gameId, @PathVariable UUID challengeId, @RequestBody PatchChallengeRequest request) {
+        return challengeService.patchChallenge(gameId, challengeId, request);
     }
 
     @PostMapping("{challengeId}/start")

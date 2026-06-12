@@ -9,4 +9,6 @@ import com.nilskulawiak.jetlagtracker.game.Game;
 
 public interface StationRepository extends JpaRepository<Station, UUID>{
     List<Station> findByGame(Game game);
+
+    void deleteByGame(Game game);
 }

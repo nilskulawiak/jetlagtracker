@@ -12,4 +12,6 @@ public interface StationChipStateRepository extends JpaRepository<StationChipSta
     Optional<StationChipState> findByStationAndTeam(Station station, Team team);
 
     List<StationChipState> findByStation(Station station);
+
+    void deleteByStation(Station station);
 }

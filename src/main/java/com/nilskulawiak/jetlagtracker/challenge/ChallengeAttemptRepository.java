@@ -12,4 +12,6 @@ public interface ChallengeAttemptRepository extends JpaRepository<ChallengeAttem
     Optional<ChallengeAttempt> findByChallengeAndTeam(Challenge challenge, Team team);
 
     long countByChallengeAndStatus(Challenge challenge, ChallengeAttemptStatus status);
+
+    void deleteByChallenge(Challenge challenge);
 }

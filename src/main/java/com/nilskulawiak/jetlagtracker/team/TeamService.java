@@ -47,4 +47,44 @@ public class TeamService {
 
         return TeamResponse.from(savedTeam);
     }
+
+    public void deleteTeam(UUID gameId, UUID teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        if (!team.getGame().getId().equals(gameId)) {
+            throw new IllegalArgumentException("Team does not belong to this game");
+        }
+
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Teams can only be deleted before the game starts");
+        }
+
+        teamRepository.delete(team);
+    }
+
+    public TeamResponse patchTeam(UUID gameId, UUID teamId, PatchTeamRequest request) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        if (!team.getGame().getId().equals(gameId)) {
+            throw new IllegalArgumentException("Team does not belong to this game");
+        }
+
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Teams can only be updated before the game starts");
+        }
+
+        if (request.name() != null) team.setName(request.name());
+        if (request.color() != null) team.setColor(request.color());
+        if (request.availableChips() != null) team.setAvailableChips(request.availableChips());
+
+        return TeamResponse.from(teamRepository.save(team));
+    }
 }
