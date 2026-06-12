@@ -149,8 +149,7 @@ public class ChallengeService {
         gameActionService.log(
                 game,
                 GameActionType.CHALLENGE_FAILED,
-                team.getName() + " completed " + challenge.getName()
-                        + " and gained " + challenge.getReward() + " chips"
+                team.getName() + " failed " + challenge.getName()
         );
 
         return ChallengeResponse.from(challenge);
