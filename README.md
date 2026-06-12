@@ -89,21 +89,33 @@ The API will be available at `http://localhost:8080`.
 | `POST` | `/games` | Create a game manually |
 | `POST` | `/games/from-preset` | Create a game from a preset |
 | `POST` | `/games/{gameId}/start` | Start a game |
+| `PATCH` | `/games/{gameId}` | Update game settings (only before game starts) |
+| `DELETE` | `/games/{gameId}` | Delete a game and all its data |
 | `GET` | `/games` | List all games |
 | `GET` | `/games/{gameId}/state` | Full game state (teams, stations, challenges) |
 | `GET` | `/games/{gameId}/actions` | Action log |
 
-### Teams & Stations
+### Teams
 | Method | Path | Description |
 |--------|------|-------------|
 | `POST` | `/games/{gameId}/teams` | Add a team |
+| `PATCH` | `/games/{gameId}/teams/{teamId}` | Update a team (only before game starts) |
+| `DELETE` | `/games/{gameId}/teams/{teamId}` | Delete a team (only before game starts) |
+
+### Stations
+| Method | Path | Description |
+|--------|------|-------------|
 | `POST` | `/games/{gameId}/stations` | Add a station |
+| `PATCH` | `/games/{gameId}/stations/{stationId}` | Update a station (only before game starts) |
+| `DELETE` | `/games/{gameId}/stations/{stationId}` | Delete a station (only before game starts) |
 | `POST` | `/games/{gameId}/stations/{stationId}/chips` | Place chips on a station |
 
 ### Challenges
 | Method | Path | Description |
 |--------|------|-------------|
 | `POST` | `/games/{gameId}/challenges` | Add a challenge |
+| `PATCH` | `/games/{gameId}/challenges/{challengeId}` | Update a challenge (only before game starts) |
+| `DELETE` | `/games/{gameId}/challenges/{challengeId}` | Delete a challenge (only before game starts) |
 | `POST` | `/games/{gameId}/challenges/{challengeId}/start` | Start a challenge (locks in `callShot` for `CALL_YOUR_SHOT` type) |
 | `POST` | `/games/{gameId}/challenges/{challengeId}/complete` | Mark a started challenge as completed by a team |
 | `POST` | `/games/{gameId}/challenges/{challengeId}/fail` | Mark a started challenge as failed by a team |

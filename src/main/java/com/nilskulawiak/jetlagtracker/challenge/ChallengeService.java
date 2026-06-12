@@ -27,6 +27,51 @@ public class ChallengeService {
     private final ChallengeAttemptRepository challengeAttemptRepository;
     private final GameActionService gameActionService;
 
+    public void deleteChallenge(UUID gameId, UUID challengeId) {
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
+
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        if (!challenge.getGame().getId().equals(gameId)) {
+            throw new IllegalArgumentException("Challenge does not belong to this game");
+        }
+
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Challenges can only be deleted before the game starts");
+        }
+
+        challengeAttemptRepository.deleteByChallenge(challenge);
+        challengeRepository.delete(challenge);
+    }
+
+    public ChallengeResponse patchChallenge(UUID gameId, UUID challengeId, PatchChallengeRequest request) {
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
+
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        if (!challenge.getGame().getId().equals(gameId)) {
+            throw new IllegalArgumentException("Challenge does not belong to this game");
+        }
+
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Challenges can only be updated before the game starts");
+        }
+
+        if (request.name() != null) challenge.setName(request.name());
+        if (request.description() != null) challenge.setDescription(request.description());
+        if (request.reward() != null) challenge.setReward(request.reward());
+        if (request.xCoordinate() != null) challenge.setXCoordinate(request.xCoordinate());
+        if (request.yCoordinate() != null) challenge.setYCoordinate(request.yCoordinate());
+        if (request.challengeType() != null) challenge.setChallengeType(request.challengeType());
+        if (request.status() != null) challenge.setStatus(request.status());
+
+        return ChallengeResponse.from(challenge);
+    }
+
     public ChallengeResponse createChallenge(UUID gameId, CreateChallengeRequest request) {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("Game not found"));

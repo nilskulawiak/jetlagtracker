@@ -9,4 +9,6 @@ import com.nilskulawiak.jetlagtracker.game.Game;
 
 public interface GameActionRepository extends JpaRepository<GameAction, UUID> {
     List<GameAction> findByGameOrderByCreatedAtDesc(Game game);
+
+    void deleteByGame(Game game);
 }

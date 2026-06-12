@@ -16,6 +16,7 @@ import com.nilskulawiak.jetlagtracker.action.GameActionResponse;
 import com.nilskulawiak.jetlagtracker.action.GameActionService;
 import com.nilskulawiak.jetlagtracker.action.GameActionType;
 import com.nilskulawiak.jetlagtracker.challenge.Challenge;
+import com.nilskulawiak.jetlagtracker.challenge.ChallengeAttemptRepository;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeRepository;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeResponse;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeStatus;
@@ -42,6 +43,7 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final ChallengeRepository challengeRepository;
+    private final ChallengeAttemptRepository challengeAttemptRepository;
     private final StationRepository stationRepository;
     private final TeamRepository teamRepository;
     private final StationChipStateRepository stationChipStateRepository;
@@ -158,6 +160,37 @@ public class GameService {
                 challenges.stream().map(ChallengeResponse::from).toList(),
                 gameAction.stream().map(GameActionResponse::from).toList()
         );
+    }
+
+    @Transactional
+    public void deleteGame(UUID gameId) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        gameActionRepository.deleteByGame(game);
+        challengeRepository.findByGame(game).forEach(challengeAttemptRepository::deleteByChallenge);
+        challengeRepository.deleteByGame(game);
+        stationRepository.findByGame(game).forEach(stationChipStateRepository::deleteByStation);
+        stationRepository.deleteByGame(game);
+        teamRepository.deleteByGame(game);
+        gameRepository.delete(game);
+    }
+
+    @Transactional
+    public GameResponse patchGame(UUID gameId, PatchGameRequest request) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+
+        if (game.getStatus() != GameStatus.CREATED) {
+            throw new IllegalArgumentException("Games can only be updated before they start");
+        }
+
+        if (request.name() != null) game.setName(request.name());
+        if (request.mapWidth() != null) game.setMapWidth(request.mapWidth());
+        if (request.mapHeight() != null) game.setMapHeight(request.mapHeight());
+        if (request.mapImage() != null) game.setMapImage(request.mapImage());
+
+        return GameResponse.from(game);
     }
 
     public GamesResponse getGames(){
