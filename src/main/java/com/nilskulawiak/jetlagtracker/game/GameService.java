@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -131,10 +133,14 @@ public class GameService {
         List<Challenge> challenges = challengeRepository.findByGame(game);
         List<GameAction> gameAction = gameActionRepository.findByGameOrderByCreatedAtDesc(game);
 
+        Map<UUID, List<StationChipState>> chipStatesByStation =
+                stationChipStateRepository.findByStationIn(stations).stream()
+                        .collect(Collectors.groupingBy(cs -> cs.getStation().getId()));
+
         List<StationStateResponse> stationResponses = stations.stream()
                 .map(station -> {
                     List<StationChipState> chipStates =
-                            stationChipStateRepository.findByStation(station);
+                            chipStatesByStation.getOrDefault(station.getId(), List.of());
 
                     UUID ownerTeamId = calculateStationOwner(chipStates)
                             .map(Team::getId)
