@@ -1,5 +1,7 @@
 package com.nilskulawiak.jetlagtracker.challenge;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,4 +16,6 @@ public interface ChallengeAttemptRepository extends JpaRepository<ChallengeAttem
     long countByChallengeAndStatus(Challenge challenge, ChallengeAttemptStatus status);
 
     void deleteByChallenge(Challenge challenge);
+
+    List<ChallengeAttempt> findByChallengeIn(Collection<Challenge> challenge);
 }

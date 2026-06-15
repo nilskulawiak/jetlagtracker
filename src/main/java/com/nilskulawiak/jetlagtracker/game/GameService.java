@@ -2,10 +2,8 @@ package com.nilskulawiak.jetlagtracker.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -18,9 +16,10 @@ import com.nilskulawiak.jetlagtracker.action.GameActionResponse;
 import com.nilskulawiak.jetlagtracker.action.GameActionService;
 import com.nilskulawiak.jetlagtracker.action.GameActionType;
 import com.nilskulawiak.jetlagtracker.challenge.Challenge;
+import com.nilskulawiak.jetlagtracker.challenge.ChallengeAttempt;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeAttemptRepository;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeRepository;
-import com.nilskulawiak.jetlagtracker.challenge.ChallengeResponse;
+import com.nilskulawiak.jetlagtracker.challenge.ChallengeStateResponse;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeStatus;
 import com.nilskulawiak.jetlagtracker.preset.ChallengePreset;
 import com.nilskulawiak.jetlagtracker.preset.GamePreset;
@@ -29,7 +28,6 @@ import com.nilskulawiak.jetlagtracker.preset.StationPreset;
 import com.nilskulawiak.jetlagtracker.station.Station;
 import com.nilskulawiak.jetlagtracker.station.StationChipState;
 import com.nilskulawiak.jetlagtracker.station.StationChipStateRepository;
-import com.nilskulawiak.jetlagtracker.station.StationChipStateResponse;
 import com.nilskulawiak.jetlagtracker.station.StationRepository;
 import com.nilskulawiak.jetlagtracker.station.StationStateResponse;
 import com.nilskulawiak.jetlagtracker.team.CreateTeamRequest;
@@ -138,32 +136,26 @@ public class GameService {
                         .collect(Collectors.groupingBy(cs -> cs.getStation().getId()));
 
         List<StationStateResponse> stationResponses = stations.stream()
-                .map(station -> {
-                    List<StationChipState> chipStates =
-                            chipStatesByStation.getOrDefault(station.getId(), List.of());
+                .map(station -> StationStateResponse.from(
+                        station,
+                        chipStatesByStation.getOrDefault(station.getId(), List.of())))
+                .toList();
 
-                    UUID ownerTeamId = calculateStationOwner(chipStates)
-                            .map(Team::getId)
-                            .orElse(null);
+        Map<UUID, List<ChallengeAttempt>> challengeAttemptsByChallenge =
+                challengeAttemptRepository.findByChallengeIn(challenges).stream()
+                        .collect(Collectors.groupingBy(cs -> cs.getChallenge().getId()));
 
-                    return new StationStateResponse(
-                            station.getId(),
-                            station.getName(),
-                            station.getXCoordinate(),
-                            station.getYCoordinate(),
-                            ownerTeamId,
-                            chipStates.stream()
-                                    .map(StationChipStateResponse::from)
-                                    .toList()
-                    );
-                })
+        List<ChallengeStateResponse> challengeResponses = challenges.stream()
+                .map(challenge -> ChallengeStateResponse.from(
+                        challenge,
+                        challengeAttemptsByChallenge.getOrDefault(challenge.getId(), List.of())))
                 .toList();
 
         return new GameStateResponse(
                 GameResponse.from(game),
                 teams.stream().map(TeamResponse::from).toList(),
                 stationResponses,
-                challenges.stream().map(ChallengeResponse::from).toList(),
+                challengeResponses,
                 gameAction.stream().map(GameActionResponse::from).toList()
         );
     }
@@ -255,11 +247,5 @@ public class GameService {
         }
 
         return GameResponse.from(game);
-    }
-
-    private Optional<Team> calculateStationOwner(List<StationChipState> chipStates) {
-        return chipStates.stream()
-                .max(Comparator.comparingInt(StationChipState::getChips))
-                .map(StationChipState::getTeam);
     }
 }
