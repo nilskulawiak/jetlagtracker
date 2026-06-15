@@ -71,8 +71,8 @@
     {
       "name": "Jiaoxi Hot Springs Trivia",
       "description": "Sitting in one of Jiaoxi's famous hot springs, one team member must correctly answer as many trivia questions as possible in 60 seconds. Call your shot beforehand — you earn 8 chips per correct answer.",
-      "challengeType": "CHIPS",
-      "reward": 40,
+      "challengeType": "CALL_YOUR_SHOT",
+      "reward": 8,
       "xCoordinate": 520,
       "yCoordinate": 228
     },
@@ -87,8 +87,8 @@
     {
       "name": "Chun Shui Tang Bubble Tea",
       "description": "At the Taichung teahouse where bubble tea was invented, blow tapioca balls through a straw at your partner, who must catch them in a cup. Call your shot — you earn 3 chips per boba caught, but miss your target and you earn nothing.",
-      "challengeType": "STEAL",
-      "reward": 25,
+      "challengeType": "CALL_YOUR_SHOT",
+      "reward": 3,
       "xCoordinate": 307,
       "yCoordinate": 518
     },
@@ -111,8 +111,8 @@
     {
       "name": "Monkey Mountain",
       "description": "Ascend Shoushan (Monkey Mountain) in Kaohsiung. Call your shot for how many Formosan macaques you will spot during the climb — you earn 2 chips per monkey if you hit your number, nothing if you fall short.",
-      "challengeType": "CHIPS",
-      "reward": 40,
+      "challengeType": "CALL_YOUR_SHOT",
+      "reward": 2,
       "xCoordinate": 270,
       "yCoordinate": 848
     }
