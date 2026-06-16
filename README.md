@@ -14,7 +14,7 @@ This backend tracks all of that state — which stations each team owns, how man
 - **Multi-team support** — any number of teams per game
 - **Station chip placement** — enforces the "exceed by at most 5" rule and deducts chips from the placing team's balance
 - **Challenge lifecycle** — challenges move through `CREATED → AVAILABLE → DONE`; a team must explicitly start a challenge before completing or failing it; when a challenge is resolved, replacement challenges are surfaced automatically
-- **Challenge types** — `CHIPS` (flat reward), `MULTIPLIER` (scales existing balance), `STEAL` (transfers chips from opponent), `CALL_YOUR_SHOT` (team declares a count upfront at start time; earns `call × reward` chips if they meet it, nothing otherwise)
+- **Challenge types** — `CHIPS` (flat reward), `MULTIPLIER` (scales existing balance), `STEAL` (transfers chips from opponent), `CALL_YOUR_SHOT` (team declares a count when completing; earns `callShot × reward` chips)
 - **Action log** — append-only audit trail of every game event (chip placements, challenge outcomes, etc.)
 - **Game state endpoint** — single endpoint returning the complete current state: teams, stations, chip counts, and active challenges
 
@@ -116,7 +116,7 @@ The API will be available at `http://localhost:8080`.
 | `POST` | `/games/{gameId}/challenges` | Add a challenge |
 | `PATCH` | `/games/{gameId}/challenges/{challengeId}` | Update a challenge |
 | `DELETE` | `/games/{gameId}/challenges/{challengeId}` | Delete a challenge |
-| `POST` | `/games/{gameId}/challenges/{challengeId}/start` | Start a challenge (locks in `callShot` for `CALL_YOUR_SHOT` type) |
+| `POST` | `/games/{gameId}/challenges/{challengeId}/start` | Start a challenge |
 | `POST` | `/games/{gameId}/challenges/{challengeId}/complete` | Mark a started challenge as completed by a team |
 | `POST` | `/games/{gameId}/challenges/{challengeId}/fail` | Mark a started challenge as failed by a team |
 
