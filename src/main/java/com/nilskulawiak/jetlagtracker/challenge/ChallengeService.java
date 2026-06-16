@@ -130,7 +130,6 @@ public class ChallengeService {
         attempt.setChallenge(challenge);
         attempt.setTeam(team);
         attempt.setStatus(ChallengeAttemptStatus.IN_PROGRESS);
-        attempt.setCallShot(request.callShot());
         challengeAttemptRepository.save(attempt);
 
         gameActionService.log(
@@ -187,7 +186,8 @@ public class ChallengeService {
                 chipsEarned = applyStealReward(challenge, team, request.enemyTeamId());
             }
             case CALL_YOUR_SHOT -> {
-                chipsEarned = applyCallYourShotReward(challenge, team, attempt.getCallShot());
+                attempt.setCallShot(request.callShot());
+                chipsEarned = applyCallYourShotReward(challenge, team, request.callShot());
             }
             default -> throw new IllegalStateException("Unknown challenge type: " + challenge.getChallengeType());
         }

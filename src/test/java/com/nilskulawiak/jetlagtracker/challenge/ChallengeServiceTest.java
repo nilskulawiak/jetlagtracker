@@ -57,7 +57,7 @@ class ChallengeServiceTest {
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
         when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.empty());
 
-        challengeService.startChallenge(game.getId(), challenge.getId(), new StartChallengeRequest(team.getId(), null));
+        challengeService.startChallenge(game.getId(), challenge.getId(), new StartChallengeRequest(team.getId()));
 
         ArgumentCaptor<ChallengeAttempt> captor = ArgumentCaptor.forClass(ChallengeAttempt.class);
         verify(challengeAttemptRepository).save(captor.capture());
@@ -66,22 +66,22 @@ class ChallengeServiceTest {
     }
 
     @Test
-    void startChallengeStoresCallShotOnAttemptForCallYourShot() {
+    void completeChallengeStoresCallShotOnAttemptFromRequest() {
         Game game = gameWithId(UUID.randomUUID());
         Team team = teamWithId(UUID.randomUUID(), game);
         Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 5);
         challenge.setChallengeType(ChallengeType.CALL_YOUR_SHOT);
+        ChallengeAttempt attempt = inProgressAttempt(challenge, team);
 
         when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
         when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
-        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.empty());
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.of(attempt));
+        when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of());
 
-        challengeService.startChallenge(game.getId(), challenge.getId(), new StartChallengeRequest(team.getId(), 4));
+        challengeService.completeChallenge(game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, 4));
 
-        ArgumentCaptor<ChallengeAttempt> captor = ArgumentCaptor.forClass(ChallengeAttempt.class);
-        verify(challengeAttemptRepository).save(captor.capture());
-        assertThat(captor.getValue().getCallShot()).isEqualTo(4);
+        assertThat(attempt.getCallShot()).isEqualTo(4);
     }
 
     @Test
@@ -95,7 +95,7 @@ class ChallengeServiceTest {
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
 
         assertThatThrownBy(() -> challengeService.startChallenge(
-                game.getId(), challenge.getId(), new StartChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new StartChallengeRequest(team.getId())))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Challenge not available");
     }
@@ -112,7 +112,7 @@ class ChallengeServiceTest {
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
 
         assertThatThrownBy(() -> challengeService.startChallenge(
-                game.getId(), challenge.getId(), new StartChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new StartChallengeRequest(team.getId())))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Game has not yet started");
     }
@@ -130,7 +130,7 @@ class ChallengeServiceTest {
                 .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
 
         assertThatThrownBy(() -> challengeService.startChallenge(
-                game.getId(), challenge.getId(), new StartChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new StartChallengeRequest(team.getId())))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Team has already started this challenge");
     }
@@ -152,7 +152,7 @@ class ChallengeServiceTest {
         when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of(replacement));
 
         ChallengeResponse response = challengeService.completeChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null));
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null));
 
         assertThat(response.status()).isEqualTo(ChallengeStatus.DONE);
         assertThat(replacement.getStatus()).isEqualTo(ChallengeStatus.AVAILABLE);
@@ -174,7 +174,7 @@ class ChallengeServiceTest {
                 .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
         when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of());
 
-        challengeService.completeChallenge(game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null));
+        challengeService.completeChallenge(game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null));
 
         assertThat(team.getAvailableChips()).isEqualTo(150);
     }
@@ -196,7 +196,7 @@ class ChallengeServiceTest {
                 .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
         when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of());
 
-        challengeService.completeChallenge(game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), enemy.getId()));
+        challengeService.completeChallenge(game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), enemy.getId(), null));
 
         assertThat(enemy.getAvailableChips()).isEqualTo(70);
         assertThat(team.getAvailableChips()).isEqualTo(30);
@@ -209,7 +209,6 @@ class ChallengeServiceTest {
         Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 5);
         challenge.setChallengeType(ChallengeType.CALL_YOUR_SHOT);
         ChallengeAttempt attempt = inProgressAttempt(challenge, team);
-        attempt.setCallShot(3);
 
         when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
         when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
@@ -217,7 +216,7 @@ class ChallengeServiceTest {
         when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.of(attempt));
         when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of());
 
-        challengeService.completeChallenge(game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null));
+        challengeService.completeChallenge(game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, 3));
 
         assertThat(team.getAvailableChips()).isEqualTo(15); // 3 * 5
     }
@@ -234,7 +233,7 @@ class ChallengeServiceTest {
         when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> challengeService.completeChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Team has not started this challenge");
     }
@@ -253,7 +252,7 @@ class ChallengeServiceTest {
         when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.of(attempt));
 
         assertThatThrownBy(() -> challengeService.completeChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Team has already resolved this challenge");
     }
@@ -269,7 +268,7 @@ class ChallengeServiceTest {
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
 
         assertThatThrownBy(() -> challengeService.completeChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Challenge not available");
     }
@@ -286,7 +285,7 @@ class ChallengeServiceTest {
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
 
         assertThatThrownBy(() -> challengeService.completeChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Game has not yet started");
     }
@@ -305,7 +304,7 @@ class ChallengeServiceTest {
                 .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
 
         assertThatThrownBy(() -> challengeService.completeChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Enemy team is required for steal challenges");
     }
@@ -324,7 +323,7 @@ class ChallengeServiceTest {
                 .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
 
         assertThatThrownBy(() -> challengeService.completeChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), team.getId())))
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), team.getId(), null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Team cannot steal from itself");
     }
@@ -335,16 +334,15 @@ class ChallengeServiceTest {
         Team team = teamWithId(UUID.randomUUID(), game);
         Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 5);
         challenge.setChallengeType(ChallengeType.CALL_YOUR_SHOT);
-        ChallengeAttempt attempt = inProgressAttempt(challenge, team);
-        attempt.setCallShot(null);
 
         when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
         when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
-        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.of(attempt));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team))
+                .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
 
         assertThatThrownBy(() -> challengeService.completeChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("callShot must be a positive number for call-your-shot challenges");
     }
@@ -355,16 +353,15 @@ class ChallengeServiceTest {
         Team team = teamWithId(UUID.randomUUID(), game);
         Challenge challenge = challengeWithId(UUID.randomUUID(), game, ChallengeStatus.AVAILABLE, 5);
         challenge.setChallengeType(ChallengeType.CALL_YOUR_SHOT);
-        ChallengeAttempt attempt = inProgressAttempt(challenge, team);
-        attempt.setCallShot(0);
 
         when(challengeRepository.findById(challenge.getId())).thenReturn(Optional.of(challenge));
         when(teamRepository.findById(team.getId())).thenReturn(Optional.of(team));
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
-        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.of(attempt));
+        when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team))
+                .thenReturn(Optional.of(inProgressAttempt(challenge, team)));
 
         assertThatThrownBy(() -> challengeService.completeChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, 0)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("callShot must be a positive number for call-your-shot challenges");
     }
@@ -386,7 +383,7 @@ class ChallengeServiceTest {
         when(challengeAttemptRepository.countByChallengeAndStatus(challenge, ChallengeAttemptStatus.FAILED)).thenReturn(1L);
 
         ChallengeResponse response = challengeService.failChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null));
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null));
 
         assertThat(response.status()).isEqualTo(ChallengeStatus.AVAILABLE);
         assertThat(challenge.getReward()).isEqualTo(15);
@@ -409,7 +406,7 @@ class ChallengeServiceTest {
         when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED)).thenReturn(List.of(replacement));
 
         ChallengeResponse response = challengeService.failChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null));
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null));
 
         assertThat(response.status()).isEqualTo(ChallengeStatus.DONE);
         assertThat(challenge.getReward()).isEqualTo(17);
@@ -428,7 +425,7 @@ class ChallengeServiceTest {
         when(challengeAttemptRepository.findByChallengeAndTeam(challenge, team)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> challengeService.failChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Team has not started this challenge");
     }
@@ -444,7 +441,7 @@ class ChallengeServiceTest {
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
 
         assertThatThrownBy(() -> challengeService.failChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Challenge not available");
     }
@@ -461,7 +458,7 @@ class ChallengeServiceTest {
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
 
         assertThatThrownBy(() -> challengeService.failChallenge(
-                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null)))
+                game.getId(), challenge.getId(), new FinishChallengeRequest(team.getId(), null, null)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Game has not yet started");
     }

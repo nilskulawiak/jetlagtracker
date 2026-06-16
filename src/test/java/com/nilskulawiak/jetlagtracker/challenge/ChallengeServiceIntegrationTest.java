@@ -51,8 +51,8 @@ class ChallengeServiceIntegrationTest {
         Challenge active = challengeRepository.save(newChallenge(game, "Active", ChallengeStatus.AVAILABLE, 20));
         Challenge queued = challengeRepository.save(newChallenge(game, "Queued", ChallengeStatus.CREATED, 5));
 
-        challengeService.startChallenge(game.getId(), active.getId(), new StartChallengeRequest(team.getId(), null));
-        challengeService.completeChallenge(game.getId(), active.getId(), new FinishChallengeRequest(team.getId(), null));
+        challengeService.startChallenge(game.getId(), active.getId(), new StartChallengeRequest(team.getId()));
+        challengeService.completeChallenge(game.getId(), active.getId(), new FinishChallengeRequest(team.getId(), null, null));
 
         Challenge savedActive = challengeRepository.findById(active.getId()).orElseThrow();
         Challenge savedQueued = challengeRepository.findById(queued.getId()).orElseThrow();
@@ -75,15 +75,15 @@ class ChallengeServiceIntegrationTest {
         Challenge active = challengeRepository.save(newChallenge(game, "Active", ChallengeStatus.AVAILABLE, 8));
         Challenge queued = challengeRepository.save(newChallenge(game, "Queued", ChallengeStatus.CREATED, 5));
 
-        challengeService.startChallenge(game.getId(), active.getId(), new StartChallengeRequest(firstTeam.getId(), null));
-        challengeService.failChallenge(game.getId(), active.getId(), new FinishChallengeRequest(firstTeam.getId(), null));
+        challengeService.startChallenge(game.getId(), active.getId(), new StartChallengeRequest(firstTeam.getId()));
+        challengeService.failChallenge(game.getId(), active.getId(), new FinishChallengeRequest(firstTeam.getId(), null, null));
 
         Challenge afterFirstFailure = challengeRepository.findById(active.getId()).orElseThrow();
         assertThat(afterFirstFailure.getStatus()).isEqualTo(ChallengeStatus.AVAILABLE);
         assertThat(afterFirstFailure.getReward()).isEqualTo(12);
 
-        challengeService.startChallenge(game.getId(), active.getId(), new StartChallengeRequest(finalTeam.getId(), null));
-        challengeService.failChallenge(game.getId(), active.getId(), new FinishChallengeRequest(finalTeam.getId(), null));
+        challengeService.startChallenge(game.getId(), active.getId(), new StartChallengeRequest(finalTeam.getId()));
+        challengeService.failChallenge(game.getId(), active.getId(), new FinishChallengeRequest(finalTeam.getId(), null, null));
 
         Challenge afterFinalFailure = challengeRepository.findById(active.getId()).orElseThrow();
         Challenge savedQueued = challengeRepository.findById(queued.getId()).orElseThrow();
@@ -99,8 +99,8 @@ class ChallengeServiceIntegrationTest {
         Team team = teamRepository.save(newTeam(game, "Callers"));
         Challenge active = challengeRepository.save(newCallYourShotChallenge(game, "Call It", ChallengeStatus.AVAILABLE, 4));
 
-        challengeService.startChallenge(game.getId(), active.getId(), new StartChallengeRequest(team.getId(), 3));
-        challengeService.completeChallenge(game.getId(), active.getId(), new FinishChallengeRequest(team.getId(), null));
+        challengeService.startChallenge(game.getId(), active.getId(), new StartChallengeRequest(team.getId()));
+        challengeService.completeChallenge(game.getId(), active.getId(), new FinishChallengeRequest(team.getId(), null, 3));
 
         Team savedTeam = teamRepository.findById(team.getId()).orElseThrow();
         assertThat(savedTeam.getAvailableChips()).isEqualTo(12); // 3 * 4
@@ -117,8 +117,8 @@ class ChallengeServiceIntegrationTest {
         Team team = teamRepository.save(newTeam(game, "Callers"));
         Challenge active = challengeRepository.save(newCallYourShotChallenge(game, "Call It", ChallengeStatus.AVAILABLE, 4));
 
-        challengeService.startChallenge(game.getId(), active.getId(), new StartChallengeRequest(team.getId(), 5));
-        challengeService.failChallenge(game.getId(), active.getId(), new FinishChallengeRequest(team.getId(), null));
+        challengeService.startChallenge(game.getId(), active.getId(), new StartChallengeRequest(team.getId()));
+        challengeService.failChallenge(game.getId(), active.getId(), new FinishChallengeRequest(team.getId(), null, null));
 
         Team savedTeam = teamRepository.findById(team.getId()).orElseThrow();
         assertThat(savedTeam.getAvailableChips()).isEqualTo(0);
