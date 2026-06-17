@@ -4,7 +4,7 @@ A Spring Boot REST API for tracking live game state in [Jet Lag: The Game](https
 
 ## What is Jet Lag: The Game?
 
-Jet Lag is a travel competition show where two teams race to claim as many train stations as possible on a real map by visiting them and placing chips. Chips are earned by completing (or lost by failing) challenges distributed around the map. Stations can be stolen by placing more chips than the opposing team, but a team can only exceed their opponent by a maximum of 5 chips at a time.
+Jet Lag is a travel competition show where two teams race across a country by train, claiming stations and completing challenges to earn chips. The team that controls the most stations wins.
 
 This backend tracks all of that state — which stations each team owns, how many chips they hold, which challenges are available, and a full action log — so that both teams always have an accurate picture of the current game, regardless of where they are.
 
@@ -12,11 +12,13 @@ This backend tracks all of that state — which stations each team owns, how man
 
 - **Game presets** — load a pre-configured map (stations, coordinates, challenges) from a JSON file; includes a Taiwan Rail Rush preset
 - **Multi-team support** — any number of teams per game
-- **Station chip placement** — enforces the "exceed by at most 5" rule and deducts chips from the placing team's balance
+- **Station chip placement** — enforces that the placing team's total must exceed the opponent's by at least 1 and at most 5 (ties not allowed); deducts chips from the placing team's balance
 - **Challenge lifecycle** — challenges move through `CREATED → AVAILABLE → DONE`; a team must explicitly start a challenge before completing or failing it; when a challenge is resolved, replacement challenges are surfaced automatically
 - **Challenge types** — `CHIPS` (flat reward), `MULTIPLIER` (scales existing balance), `STEAL` (transfers chips from opponent), `CALL_YOUR_SHOT` (team declares a count when completing; earns `callShot × reward` chips)
 - **Action log** — append-only audit trail of every game event (chip placements, challenge outcomes, etc.)
 - **Game state endpoint** — single endpoint returning the complete current state: teams, stations, chip counts, and active challenges
+
+> **Scope note:** In the real show, teams can only pass through a station they own and can only attempt a challenge if they are physically at that location. Location tracking is intentionally out of scope for this app.
 
 ## Tech Stack
 

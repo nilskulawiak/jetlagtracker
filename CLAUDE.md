@@ -41,7 +41,7 @@ Each domain package follows the same layout: `Entity`, `Repository`, `Service`, 
 ## Domain Rules
 
 ### Chip placement (`StationService`)
-- A team can place chips on any station, but their total on that station cannot exceed the opponent's by more than 5.
+- After placement, a team's total on a station must exceed the maximum opponent total by **at least 1 and at most 5**. Ties are intentionally forbidden — you can only place chips if doing so puts you strictly in the lead.
 - Chips placed are deducted from the team's `availableChips` balance.
 - A team cannot place chips they don't have.
 
