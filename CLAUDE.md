@@ -58,8 +58,8 @@ CREATED → AVAILABLE → DONE
 | Type | Reward on complete |
 |---|---|
 | `CHIPS` | `+reward` chips to team |
-| `MULTIPLIER` | `availableChips = availableChips * reward / 100` |
-| `STEAL` | Steals `enemyTeam.availableChips * reward / 100` chips from enemy (requires `enemyTeamId` in request) |
+| `MULTIPLIER` | `availableChips = availableChips * reward / 100` (integer division — truncates toward zero, intentional) |
+| `STEAL` | Steals `enemyTeam.availableChips * reward / 100` chips from enemy (integer division — truncates toward zero, intentional; requires `enemyTeamId` in request) |
 | `CALL_YOUR_SHOT` | Team provides `callShot` when calling `/complete`; earns `callShot × reward` chips |
 
 ### Failing a challenge
