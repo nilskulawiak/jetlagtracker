@@ -34,4 +34,7 @@ public class Game {
 
     @Column(nullable = false)
     private String mapImage;
+
+    @Version
+    private int version;
 }

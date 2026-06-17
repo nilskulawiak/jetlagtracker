@@ -11,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,4 +47,7 @@ public class Challenge {
 
     @Column(nullable = false)
     private ChallengeType challengeType;
+
+    @Version
+    private int version;
 }

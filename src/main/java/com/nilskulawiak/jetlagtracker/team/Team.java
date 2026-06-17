@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,4 +33,7 @@ public class Team {
 
     @Column(nullable = false)
     private Integer availableChips;
+
+    @Version
+    private int version;
 }

@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,4 +46,7 @@ public class ChallengeAttempt {
 
     @Column(nullable = false)
     private Instant attemptedAt = Instant.now();
+
+    @Version
+    private int version;
 }
