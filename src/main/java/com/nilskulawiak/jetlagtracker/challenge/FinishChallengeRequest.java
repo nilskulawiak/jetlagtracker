@@ -2,6 +2,8 @@ package com.nilskulawiak.jetlagtracker.challenge;
 
 import java.util.UUID;
 
-public record FinishChallengeRequest(UUID teamId, UUID enemyTeamId, Integer callShot) {
+import jakarta.validation.constraints.NotNull;
+
+public record FinishChallengeRequest(@NotNull UUID teamId, UUID enemyTeamId, Integer callShot) {
 
 }

@@ -1,4 +1,7 @@
 package com.nilskulawiak.jetlagtracker.team;
 
-public record PatchTeamRequest(String name, String color, Integer availableChips) {
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+
+public record PatchTeamRequest(@Size(min = 1) String name, @Size(min = 1) String color, @Min(0) Integer availableChips) {
 }

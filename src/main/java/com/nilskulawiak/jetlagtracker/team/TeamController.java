@@ -35,7 +35,7 @@ public class TeamController {
     }
 
     @PatchMapping("{teamId}")
-    public TeamResponse patchTeam(@PathVariable UUID gameId, @PathVariable UUID teamId, @RequestBody PatchTeamRequest request) {
+    public TeamResponse patchTeam(@PathVariable UUID gameId, @PathVariable UUID teamId, @Valid @RequestBody PatchTeamRequest request) {
         return teamService.patchTeam(gameId, teamId, request);
     }
 }

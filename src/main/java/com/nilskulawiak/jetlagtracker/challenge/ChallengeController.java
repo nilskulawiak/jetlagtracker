@@ -35,7 +35,7 @@ public class ChallengeController {
     }
 
     @PatchMapping("{challengeId}")
-    public ChallengeResponse patchChallenge(@PathVariable UUID gameId, @PathVariable UUID challengeId, @RequestBody PatchChallengeRequest request) {
+    public ChallengeResponse patchChallenge(@PathVariable UUID gameId, @PathVariable UUID challengeId, @Valid @RequestBody PatchChallengeRequest request) {
         return challengeService.patchChallenge(gameId, challengeId, request);
     }
 

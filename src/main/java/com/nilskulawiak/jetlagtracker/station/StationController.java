@@ -41,7 +41,7 @@ public class StationController {
     }
 
     @PatchMapping("{stationId}")
-    public StationResponse patchStation(@PathVariable UUID gameId, @PathVariable UUID stationId, @RequestBody PatchStationRequest request) {
+    public StationResponse patchStation(@PathVariable UUID gameId, @PathVariable UUID stationId, @Valid @RequestBody PatchStationRequest request) {
         return stationService.patchStation(gameId, stationId, request);
     }
 }

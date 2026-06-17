@@ -1,4 +1,7 @@
 package com.nilskulawiak.jetlagtracker.game;
 
-public record PatchGameRequest(String name, Integer mapWidth, Integer mapHeight, String mapImage) {
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+
+public record PatchGameRequest(@Size(min = 1) String name, @Positive Integer mapWidth, @Positive Integer mapHeight, @Size(min = 1) String mapImage) {
 }

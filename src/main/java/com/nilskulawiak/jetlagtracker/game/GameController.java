@@ -58,7 +58,7 @@ public class GameController {
     }
 
     @PatchMapping("{gameId}")
-    public GameResponse patchGame(@PathVariable UUID gameId, @RequestBody PatchGameRequest request) {
+    public GameResponse patchGame(@PathVariable UUID gameId, @Valid @RequestBody PatchGameRequest request) {
         return gameService.patchGame(gameId, request);
     }
 
