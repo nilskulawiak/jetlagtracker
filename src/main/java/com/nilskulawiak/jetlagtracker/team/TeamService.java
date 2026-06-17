@@ -10,6 +10,8 @@ import com.nilskulawiak.jetlagtracker.game.Game;
 import com.nilskulawiak.jetlagtracker.game.GameRepository;
 import com.nilskulawiak.jetlagtracker.game.GameStatus;
 
+import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -25,7 +27,7 @@ public class TeamService {
         int startingChips = rawChips != null ? rawChips : 0;
 
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (game.getStatus() != GameStatus.CREATED) {
             throw new IllegalArgumentException("Teams can only be created before the game starts");
@@ -50,10 +52,10 @@ public class TeamService {
 
     public void deleteTeam(UUID gameId, UUID teamId) {
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+                .orElseThrow(() -> new NotFoundException("Team not found"));
 
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (!team.getGame().getId().equals(gameId)) {
             throw new IllegalArgumentException("Team does not belong to this game");
@@ -68,10 +70,10 @@ public class TeamService {
 
     public TeamResponse patchTeam(UUID gameId, UUID teamId, PatchTeamRequest request) {
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+                .orElseThrow(() -> new NotFoundException("Team not found"));
 
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (!team.getGame().getId().equals(gameId)) {
             throw new IllegalArgumentException("Team does not belong to this game");

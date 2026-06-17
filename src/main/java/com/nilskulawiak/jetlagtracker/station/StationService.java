@@ -13,6 +13,7 @@ import com.nilskulawiak.jetlagtracker.game.GameRepository;
 import com.nilskulawiak.jetlagtracker.game.GameStatus;
 import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
+import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +28,7 @@ public class StationService {
 
     public StationResponse createStation(UUID gameId, CreateStationRequest request){
         Game game = gameRepository.findById(gameId)
-            .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+            .orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (game.getStatus() != GameStatus.CREATED) {
             throw new IllegalArgumentException("Stations can only be created before the game starts");
@@ -51,9 +52,9 @@ public class StationService {
     
     @Transactional
     public StationChipStateResponse addChipsToStation(UUID gameId, UUID stationId, AddChipsRequest request){
-        Station station = stationRepository.findById(stationId).orElseThrow(() -> new IllegalArgumentException("Station not found"));
-        Team team = teamRepository.findById(request.teamId()).orElseThrow(() -> new IllegalArgumentException("Team not found"));
-        Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Game not found"));
+        Station station = stationRepository.findById(stationId).orElseThrow(() -> new NotFoundException("Station not found"));
+        Team team = teamRepository.findById(request.teamId()).orElseThrow(() -> new NotFoundException("Team not found"));
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (game.getStatus() != GameStatus.STARTED){
             throw new IllegalArgumentException("Game has not yet started");
@@ -117,10 +118,10 @@ public class StationService {
 
     public void deleteStation(UUID gameId, UUID stationId) {
         Station station = stationRepository.findById(stationId)
-                .orElseThrow(() -> new IllegalArgumentException("Station not found"));
+                .orElseThrow(() -> new NotFoundException("Station not found"));
 
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (!station.getGame().getId().equals(gameId)) {
             throw new IllegalArgumentException("Station does not belong to this game");
@@ -136,10 +137,10 @@ public class StationService {
 
     public StationResponse patchStation(UUID gameId, UUID stationId, PatchStationRequest request) {
         Station station = stationRepository.findById(stationId)
-                .orElseThrow(() -> new IllegalArgumentException("Station not found"));
+                .orElseThrow(() -> new NotFoundException("Station not found"));
 
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (!station.getGame().getId().equals(gameId)) {
             throw new IllegalArgumentException("Station does not belong to this game");

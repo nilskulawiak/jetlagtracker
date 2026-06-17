@@ -14,6 +14,7 @@ import com.nilskulawiak.jetlagtracker.game.GameRepository;
 import com.nilskulawiak.jetlagtracker.game.GameStatus;
 import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
+import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,10 +30,10 @@ public class ChallengeService {
 
     public void deleteChallenge(UUID gameId, UUID challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
+                .orElseThrow(() -> new NotFoundException("Challenge not found"));
 
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (!challenge.getGame().getId().equals(gameId)) {
             throw new IllegalArgumentException("Challenge does not belong to this game");
@@ -48,10 +49,10 @@ public class ChallengeService {
 
     public ChallengeResponse patchChallenge(UUID gameId, UUID challengeId, PatchChallengeRequest request) {
         Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
+                .orElseThrow(() -> new NotFoundException("Challenge not found"));
 
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (!challenge.getGame().getId().equals(gameId)) {
             throw new IllegalArgumentException("Challenge does not belong to this game");
@@ -74,7 +75,7 @@ public class ChallengeService {
 
     public ChallengeResponse createChallenge(UUID gameId, CreateChallengeRequest request) {
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (game.getStatus() != GameStatus.CREATED) {
             throw new IllegalArgumentException("Challenges can only be created before the game starts");
@@ -104,13 +105,13 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponse startChallenge(UUID gameId, UUID challengeId, StartChallengeRequest request) {
         Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
+                .orElseThrow(() -> new NotFoundException("Challenge not found"));
 
         Team team = teamRepository.findById(request.teamId())
-                .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+                .orElseThrow(() -> new NotFoundException("Team not found"));
 
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         validateSameGame(gameId, team, challenge);
 
@@ -144,13 +145,13 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponse completeChallenge(UUID gameId, UUID challengeId, FinishChallengeRequest request) {
         Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
+                .orElseThrow(() -> new NotFoundException("Challenge not found"));
 
         Team team = teamRepository.findById(request.teamId())
-                .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+                .orElseThrow(() -> new NotFoundException("Team not found"));
 
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         validateSameGame(gameId, team, challenge);
 
@@ -208,13 +209,13 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponse failChallenge(UUID gameId, UUID challengeId, FinishChallengeRequest request) {
         Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
+                .orElseThrow(() -> new NotFoundException("Challenge not found"));
 
         Team team = teamRepository.findById(request.teamId())
-                .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+                .orElseThrow(() -> new NotFoundException("Team not found"));
 
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         validateSameGame(gameId, team, challenge);
 
@@ -289,7 +290,7 @@ public class ChallengeService {
         }
 
         Team enemyTeam = teamRepository.findById(enemyTeamId)
-                .orElseThrow(() -> new IllegalArgumentException("Enemy team not found"));
+                .orElseThrow(() -> new NotFoundException("Enemy team not found"));
 
         if (!enemyTeam.getGame().getId().equals(team.getGame().getId())) {
             throw new IllegalArgumentException("Enemy team does not belong to this game");

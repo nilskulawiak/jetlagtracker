@@ -35,6 +35,8 @@ import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
 import com.nilskulawiak.jetlagtracker.team.TeamResponse;
 
+import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -72,7 +74,7 @@ public class GameService {
     @Transactional
     public GameResponse startGame(UUID gameId, StartGameRequest request){
         Game game = gameRepository.findById(gameId)
-            .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+            .orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (game.getStatus() != GameStatus.CREATED) {
             throw new IllegalArgumentException("Game cannot be started in status: " + game.getStatus());
@@ -104,7 +106,7 @@ public class GameService {
     @Transactional
     public GameResponse finishGame(UUID gameId){
         Game game = gameRepository.findById(gameId)
-            .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+            .orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (game.getStatus() != GameStatus.STARTED) {
             throw new IllegalArgumentException("Game cannot be finished in status: " + game.getStatus());
@@ -124,7 +126,7 @@ public class GameService {
     @Transactional(readOnly = true)
     public GameStateResponse getGameState(UUID gameId) {
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         List<Team> teams = teamRepository.findByGame(game);
         List<Station> stations = stationRepository.findByGame(game);
@@ -163,7 +165,7 @@ public class GameService {
     @Transactional
     public void deleteGame(UUID gameId) {
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         gameActionRepository.deleteByGame(game);
         challengeRepository.findByGame(game).forEach(challengeAttemptRepository::deleteByChallenge);
@@ -177,7 +179,7 @@ public class GameService {
     @Transactional
     public GameResponse patchGame(UUID gameId, PatchGameRequest request) {
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+                .orElseThrow(() -> new NotFoundException("Game not found"));
 
         if (game.getStatus() != GameStatus.CREATED) {
             throw new IllegalArgumentException("Games can only be updated before they start");
