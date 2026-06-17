@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.nilskulawiak.jetlagtracker.action.GameActionService;
+import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
 import com.nilskulawiak.jetlagtracker.game.Game;
 import com.nilskulawiak.jetlagtracker.game.GameRepository;
 import com.nilskulawiak.jetlagtracker.game.GameStatus;
@@ -63,7 +64,7 @@ class TeamServiceTest {
         when(gameRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> teamService.createTeam(id, new CreateTeamRequest("Runners", "#ff0000", 10)))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("Game not found");
     }
 

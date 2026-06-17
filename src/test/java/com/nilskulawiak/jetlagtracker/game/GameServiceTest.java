@@ -17,6 +17,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.nilskulawiak.jetlagtracker.action.GameActionService;
+import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
 import com.nilskulawiak.jetlagtracker.challenge.Challenge;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeRepository;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeStatus;
@@ -96,7 +97,7 @@ class GameServiceTest {
         when(gameRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> gameService.startGame(id, new StartGameRequest(1)))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("Game not found");
     }
 
@@ -119,7 +120,7 @@ class GameServiceTest {
         when(gameRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> gameService.finishGame(id))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("Game not found");
     }
 
