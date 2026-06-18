@@ -394,7 +394,10 @@ public class ChallengeService {
             throw new IllegalArgumentException("Enemy team does not belong to this game");
         }
 
-        int stolenAmount = enemyTeam.getAvailableChips() * challenge.getReward() / 100;
+        int stolenAmount = Math.min(
+                enemyTeam.getAvailableChips() * challenge.getReward() / 100,
+                enemyTeam.getAvailableChips()
+        );
 
         enemyTeam.setAvailableChips(enemyTeam.getAvailableChips() - stolenAmount);
         team.setAvailableChips(team.getAvailableChips() + stolenAmount);

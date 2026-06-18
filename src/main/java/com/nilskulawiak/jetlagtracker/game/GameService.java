@@ -80,6 +80,10 @@ public class GameService {
             throw new IllegalArgumentException("Game cannot be started in status: " + game.getStatus());
         }
 
+        if (teamRepository.countByGame(game) < 2) {
+            throw new IllegalArgumentException("Game must have at least 2 teams before it can be started");
+        }
+
         List<Challenge> createdChallenges = challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED);
 
         if (createdChallenges.size() < request.numberOfChallenges()) {
