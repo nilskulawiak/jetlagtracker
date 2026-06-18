@@ -86,6 +86,8 @@ class GameServiceTest {
         when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED))
                 .thenReturn(List.of(challengeWithId(UUID.randomUUID(), game)));
 
+        when(teamRepository.countByGame(game)).thenReturn(2l);
+
         assertThatThrownBy(() -> gameService.startGame(game.getId(), new StartGameRequest(3)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Not enough challenges");
