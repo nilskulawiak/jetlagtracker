@@ -1361,6 +1361,126 @@
       "xCoordinate": 1207,
       "yCoordinate": 1377,
       "challengeType": "STEAL"
+    },
+    {
+      "name": "Main-Überquerung",
+      "description": "Überquere den Eisernen Steg, indem ihr euch gegenseitig tragt: eine Person trägt die andere die erste Hälfte, in der Mitte wird gewechselt. Gewonnen, wenn die Überquerung abgeschlossen ist, ohne dass ein Knie des Trägers den Boden berührt. Verloren, wenn ein Knie den Boden berührt.",
+      "reward": 3,
+      "xCoordinate": 1701,
+      "yCoordinate": 1960,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Lohrberg-Sprint",
+      "description": "Startet am Lohrberg in Seckbach und rennt zum Gipfelschild – nur auf dem Wanderpfad, nicht auf der asphaltierten Straße. Gewonnen, wenn beide Teammitglieder das Gipfelschild innerhalb von 90 Sekunden Zeitunterschied erreichen und keiner die asphaltierte Straße genutzt hat. Verloren, wenn der Unterschied größer ist oder jemand die Straße nimmt.",
+      "reward": 4,
+      "xCoordinate": 2100,
+      "yCoordinate": 1350,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Rodelbahn",
+      "description": "Fahrt beide die Sommerrodelbahn im Taunus Wunderland. Fragt vorher das Personal, was eine 'schnelle Zeit' für die Bahn ist, und nehmt das als Zielwert. Gewonnen, wenn das langsamere Teammitglied diese Zeit unterbietet. Verloren, wenn nicht.",
+      "reward": 4,
+      "xCoordinate": 150,
+      "yCoordinate": 120,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "DFB-Elfmeter",
+      "description": "Findet ein öffentliches Fußballtor in der Nähe des DFB-Campus. Fünf Elfmeter wechselseitig: eine Person schießt, die andere hält – dann getauscht. Gewonnen, wenn der Schütze mindestens 3 von 5 Schüssen verwandelt. Verloren, wenn der Torhüter 3 oder mehr Schüsse hält.",
+      "reward": 3,
+      "xCoordinate": 1310,
+      "yCoordinate": 2380,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Eissporthalle-Runde",
+      "description": "Betretet die Eissporthalle am Festplatz und absolviert beide je eine vollständige Runde auf dem Eis. Gewonnen, wenn beide die Runde abschließen, ohne zu stürzen oder die Bande zu berühren. Verloren, wenn eine Person stürzt oder die Bande berührt.",
+      "reward": 3,
+      "xCoordinate": 2087,
+      "yCoordinate": 1660,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Nidda-Überquerung",
+      "description": "Findet eine Stelle an der Nidda ohne Brücke in Sichtweite und überquert den Fluss auf eigene Weise – Trittsteine, Waten oder anderes. Gewonnen, wenn beide die Überquerung abschließen, ohne tiefer als bis zum Knie nass zu werden. Verloren, wenn jemand über das Knie nass wird oder eine Brücke benutzt.",
+      "reward": 4,
+      "xCoordinate": 895,
+      "yCoordinate": 1555,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Saalburg-Blindnavigation",
+      "description": "Ein Teammitglied studiert 5 Minuten den Lageplan der Saalburg. Das andere wird verblindet. Das sehende Mitglied führt seinen Partner nur mit Himmelsrichtungen und Schrittanzahlen vom Haupttor zur Principia – keine Links/Rechts-Angaben, keine Gebäudenamen. Gewonnen, wenn der Blinde die Principia erreicht. Verloren, wenn das falsche Gebäude betreten wird oder das Ziel nicht innerhalb von 15 Minuten erreicht wird.",
+      "reward": 6,
+      "xCoordinate": 780,
+      "yCoordinate": 65,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Grüne-Soße-Kräutertest",
+      "description": "Kauft in der Kleinmarkthalle gemischte Grüne-Soße-Kräuter. Ein Teammitglied wird verblindet und muss alle sieben traditionellen Grüne-Soße-Kräuter (Borretsch, Kerbel, Kresse, Petersilie, Pimpinelle, Sauerampfer, Schnittlauch) allein am Geruch erkennen. Gewonnen, wenn mindestens 5 von 7 korrekt benannt werden. Verloren, wenn weniger als 5 richtig sind.",
+      "reward": 4,
+      "xCoordinate": 1705,
+      "yCoordinate": 1820,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Äppelwoi-Blindtest",
+      "description": "Betretet eine Apfelweinkneipe in Sachsenhausen. Beide Teammitglieder erhalten je zwei identische Gerippte Gläser – eines mit Äppelwoi, eines mit Apfelsaft. Niemand weiß, welches welches ist. Gewonnen, wenn beide beim ersten Versuch das Glas mit Äppelwoi korrekt identifizieren. Verloren, wenn eines der Teammitglieder falsch rät.",
+      "reward": 3,
+      "xCoordinate": 1650,
+      "yCoordinate": 2070,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Liebesschloss-Schätzung",
+      "description": "Einigt euch auf einen 3-Meter-Abschnitt des Eisernen Stegs. Beide zählen gleichzeitig, mit dem Rücken zueinander, die Liebesschlösser an diesem Abschnitt. Gewonnen, wenn die beiden Ergebnisse um maximal 8 voneinander abweichen. Verloren, wenn der Unterschied größer als 8 ist.",
+      "reward": 2,
+      "xCoordinate": 1703,
+      "yCoordinate": 1955,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Waldflieger",
+      "description": "Findet im Kelsterbacher Stadtwald eine Stelle, von der aus ihr Flugzeuge hören, aber keine Flughafengebäude sehen könnt. Beide zählen 5 Minuten lang unabhängig voneinander die Flugzeuge, die direkt über euch hinwegfliegen. Gewonnen, wenn die Zahlen um maximal 3 abweichen. Verloren, wenn der Unterschied größer als 3 ist.",
+      "reward": 3,
+      "xCoordinate": 280,
+      "yCoordinate": 2770,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Goethe-Gedächtnis",
+      "description": "Ein Teammitglied betritt das Goethehaus und studiert 5 Minuten lang den Anfang von Faust. Das andere wartet draußen mit einer abfotografierten Textkopie. Danach muss das erste Mitglied aus dem Gedächtnis mindestens 6 aufeinanderfolgende Zeilen korrekt rezitieren, während das zweite anhand des Textes prüft. Gewonnen bei 6 korrekten aufeinanderfolgenden Zeilen. Verloren, wenn das nicht gelingt.",
+      "reward": 3,
+      "xCoordinate": 1672,
+      "yCoordinate": 1872,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Flughafen-Rendezvous",
+      "description": "Beide Teammitglieder gehen zur internationalen Abflugtafel am Frankfurter Flughafen. Ohne jegliche Kommunikation schreibt jeder unabhängig eine Zielstadt auf, von der er glaubt, dass der Partner dieselbe wählt. Gleichzeitig aufdecken. Gewonnen, wenn beide dieselbe Stadt gewählt haben. Verloren, wenn die Städte unterschiedlich sind.",
+      "reward": 4,
+      "xCoordinate": 510,
+      "yCoordinate": 2890,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Hugenottenjagd",
+      "description": "Erkundet Neu-Isenburg zu Fuß. Findet ohne Smartphone so viele Straßennamen, Gebäudeinschriften oder Schilder mit klar französischem Ursprung wie möglich. Gewonnen, wenn innerhalb von 25 Minuten mindestens 5 solcher Beispiele gefunden und notiert wurden. Verloren, wenn weniger als 5 gefunden werden.",
+      "reward": 4,
+      "xCoordinate": 1515,
+      "yCoordinate": 2855,
+      "challengeType": "CHIPS"
+    },
+    {
+      "name": "Heusenstamm-Fenster",
+      "description": "Stellt euch vor Schloss Heusenstamm. Beide Teammitglieder zählen unabhängig voneinander die Fenster an der straßenseitigen Hauptfassade und schreiben ihre Zahl auf, bevor sie verglichen wird. Gewonnen, wenn die Ergebnisse um maximal 3 voneinander abweichen. Verloren, wenn der Unterschied größer als 3 ist.",
+      "reward": 5,
+      "xCoordinate": 2968,
+      "yCoordinate": 2730,
+      "challengeType": "CHIPS"
     }
   ]
 }
