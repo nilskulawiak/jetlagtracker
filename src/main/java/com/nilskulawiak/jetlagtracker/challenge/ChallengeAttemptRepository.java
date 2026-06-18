@@ -15,6 +15,8 @@ public interface ChallengeAttemptRepository extends JpaRepository<ChallengeAttem
 
     long countByChallengeAndStatus(Challenge challenge, ChallengeAttemptStatus status);
 
+    boolean existsByChallenge(Challenge challenge);
+
     void deleteByChallenge(Challenge challenge);
 
     List<ChallengeAttempt> findByChallengeIn(Collection<Challenge> challenge);

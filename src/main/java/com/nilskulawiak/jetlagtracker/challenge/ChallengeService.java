@@ -59,6 +59,24 @@ public class ChallengeService {
             throw new IllegalArgumentException("Challenge does not belong to this game");
         }
 
+        if (game.getStatus() == GameStatus.STARTED) {
+            boolean hasNonRewardFields = request.name() != null || request.description() != null
+                    || request.status() != null || request.challengeType() != null
+                    || request.xCoordinate() != null || request.yCoordinate() != null;
+            if (hasNonRewardFields) {
+                throw new IllegalArgumentException("Only reward can be corrected after the game starts");
+            }
+            if (request.reward() != null) {
+                challenge.setReward(request.reward());
+                gameActionService.log(
+                        game,
+                        GameActionType.CHALLENGE_REWARD_CORRECTED,
+                        challenge.getName() + " reward corrected to " + request.reward()
+                );
+            }
+            return ChallengeResponse.from(challenge);
+        }
+
         if (game.getStatus() != GameStatus.CREATED) {
             throw new IllegalArgumentException("Challenges can only be updated before the game starts");
         }
@@ -252,6 +270,82 @@ public class ChallengeService {
         );
 
         return ChallengeResponse.from(challenge);
+    }
+
+    @Transactional
+    public ChallengeResponse revertChallengeToCreated(UUID gameId, UUID challengeId) {
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new NotFoundException("Challenge not found"));
+
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new NotFoundException("Game not found"));
+
+        if (!challenge.getGame().getId().equals(gameId)) {
+            throw new IllegalArgumentException("Challenge does not belong to this game");
+        }
+
+        if (game.getStatus() != GameStatus.STARTED) {
+            throw new IllegalArgumentException("Game has not yet started");
+        }
+
+        if (challenge.getStatus() != ChallengeStatus.AVAILABLE) {
+            throw new IllegalArgumentException("Only AVAILABLE challenges can be reverted to created");
+        }
+
+        if (challengeAttemptRepository.existsByChallenge(challenge)) {
+            throw new IllegalArgumentException("Cannot revert a challenge that has attempts");
+        }
+
+        challenge.setStatus(ChallengeStatus.CREATED);
+
+        gameActionService.log(
+                game,
+                GameActionType.CHALLENGE_REVERTED_TO_CREATED,
+                challenge.getName() + " was reverted to created"
+        );
+
+        return ChallengeResponse.from(challenge);
+    }
+
+    @Transactional
+    public void deleteChallengeAttempt(UUID gameId, UUID challengeId, UUID teamId) {
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new NotFoundException("Challenge not found"));
+
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new NotFoundException("Team not found"));
+
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new NotFoundException("Game not found"));
+
+        if (!challenge.getGame().getId().equals(gameId)) {
+            throw new IllegalArgumentException("Challenge does not belong to this game");
+        }
+
+        if (!team.getGame().getId().equals(gameId)) {
+            throw new IllegalArgumentException("Team does not belong to this game");
+        }
+
+        if (game.getStatus() != GameStatus.STARTED) {
+            throw new IllegalArgumentException("Game has not yet started");
+        }
+
+        ChallengeAttempt attempt = challengeAttemptRepository.findByChallengeAndTeam(challenge, team)
+                .orElseThrow(() -> new NotFoundException("Attempt not found"));
+
+        challengeAttemptRepository.delete(attempt);
+
+        boolean hasSuccessfulAttempt = challengeAttemptRepository
+                .countByChallengeAndStatus(challenge, ChallengeAttemptStatus.SUCCESS) > 0;
+        if (challenge.getStatus() == ChallengeStatus.DONE && !hasSuccessfulAttempt) {
+            challenge.setStatus(ChallengeStatus.AVAILABLE);
+        }
+
+        gameActionService.log(
+                game,
+                GameActionType.CHALLENGE_ATTEMPT_DELETED,
+                team.getName() + "'s attempt at " + challenge.getName() + " was deleted"
+        );
     }
 
     private void validateSameGame(UUID gameId, Team team, Challenge challenge) {

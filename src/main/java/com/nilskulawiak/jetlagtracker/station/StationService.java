@@ -117,6 +117,58 @@ public class StationService {
         return StationChipStateResponse.from(savedState);
     }
 
+    @Transactional
+    public StationChipStateResponse setStationChips(UUID gameId, UUID stationId, UUID teamId, SetStationChipsRequest request) {
+        Station station = stationRepository.findById(stationId)
+                .orElseThrow(() -> new NotFoundException("Station not found"));
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new NotFoundException("Team not found"));
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new NotFoundException("Game not found"));
+
+        if (game.getStatus() != GameStatus.STARTED) {
+            throw new IllegalArgumentException("Game has not yet started");
+        }
+
+        if (!station.getGame().getId().equals(gameId)) {
+            throw new IllegalArgumentException("Station does not belong to this game");
+        }
+
+        if (!team.getGame().getId().equals(gameId)) {
+            throw new IllegalArgumentException("Team does not belong to this game");
+        }
+
+        StationChipState state = stationChipStateRepository
+                .findByStationAndTeam(station, team)
+                .orElseGet(() -> {
+                    StationChipState newState = new StationChipState();
+                    newState.setStation(station);
+                    newState.setTeam(team);
+                    newState.setChips(0);
+                    return newState;
+                });
+
+        int delta = request.chips() - state.getChips();
+        team.setAvailableChips(team.getAvailableChips() - delta);
+
+        gameActionService.log(
+                game,
+                GameActionType.CHIPS_CORRECTED,
+                team.getName() + " chips at " + station.getName() + " corrected to " + request.chips()
+        );
+
+        if (request.chips() == 0) {
+            if (state.getId() != null) {
+                stationChipStateRepository.delete(state);
+            }
+            state.setChips(0);
+            return StationChipStateResponse.from(state);
+        }
+
+        state.setChips(request.chips());
+        return StationChipStateResponse.from(stationChipStateRepository.save(state));
+    }
+
     public void deleteStation(UUID gameId, UUID stationId) {
         Station station = stationRepository.findById(stationId)
                 .orElseThrow(() -> new NotFoundException("Station not found"));

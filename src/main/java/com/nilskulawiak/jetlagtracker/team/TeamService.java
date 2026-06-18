@@ -79,13 +79,28 @@ public class TeamService {
             throw new IllegalArgumentException("Team does not belong to this game");
         }
 
-        if (game.getStatus() != GameStatus.CREATED) {
+        boolean isStarted = game.getStatus() == GameStatus.STARTED;
+
+        if (isStarted && (request.name() != null || request.color() != null)) {
+            throw new IllegalArgumentException("Only availableChips can be corrected after the game starts");
+        }
+
+        if (!isStarted && game.getStatus() != GameStatus.CREATED) {
             throw new IllegalArgumentException("Teams can only be updated before the game starts");
         }
 
         if (request.name() != null) team.setName(request.name());
         if (request.color() != null) team.setColor(request.color());
-        if (request.availableChips() != null) team.setAvailableChips(request.availableChips());
+        if (request.availableChips() != null) {
+            team.setAvailableChips(request.availableChips());
+            if (isStarted) {
+                gameActionService.log(
+                        game,
+                        GameActionType.CHIPS_CORRECTED,
+                        team.getName() + " chips corrected to " + request.availableChips()
+                );
+            }
+        }
 
         return TeamResponse.from(teamRepository.save(team));
     }

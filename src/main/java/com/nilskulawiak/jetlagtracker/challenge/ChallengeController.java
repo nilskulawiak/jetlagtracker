@@ -56,4 +56,16 @@ public class ChallengeController {
     public ChallengeResponse failChallenge(@PathVariable UUID gameId, @PathVariable UUID challengeId, @Valid @RequestBody FinishChallengeRequest request) {
         return challengeService.failChallenge(gameId, challengeId, request);
     }
+
+    @PostMapping("{challengeId}/revert-to-created")
+    @ResponseStatus(HttpStatus.OK)
+    public ChallengeResponse revertChallengeToCreated(@PathVariable UUID gameId, @PathVariable UUID challengeId) {
+        return challengeService.revertChallengeToCreated(gameId, challengeId);
+    }
+
+    @DeleteMapping("{challengeId}/attempts/{teamId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteChallengeAttempt(@PathVariable UUID gameId, @PathVariable UUID challengeId, @PathVariable UUID teamId) {
+        challengeService.deleteChallengeAttempt(gameId, challengeId, teamId);
+    }
 }
