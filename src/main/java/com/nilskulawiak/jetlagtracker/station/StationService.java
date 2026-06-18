@@ -8,12 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nilskulawiak.jetlagtracker.action.GameActionService;
 import com.nilskulawiak.jetlagtracker.action.GameActionType;
+import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
 import com.nilskulawiak.jetlagtracker.game.Game;
 import com.nilskulawiak.jetlagtracker.game.GameRepository;
 import com.nilskulawiak.jetlagtracker.game.GameStatus;
 import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
-import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -86,10 +86,11 @@ public class StationService {
 
         int resultingChips = state.getChips() + request.chips();
         int maximumOpponentChips = getMaximumOpponentChips(station, team);
+        int maximumChipsMoreThanOpponent = 5;
 
-        if (resultingChips > maximumOpponentChips + 5){
+        if (resultingChips > maximumOpponentChips + maximumChipsMoreThanOpponent){
             throw new IllegalArgumentException(
-                    "Cannot exceed opponent chips by more than 5"
+                    String.format("Cannot exceed opponent chips by more than %d", maximumChipsMoreThanOpponent)
             );            
         }
 

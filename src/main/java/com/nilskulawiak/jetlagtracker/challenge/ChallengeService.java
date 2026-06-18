@@ -1,20 +1,20 @@
 package com.nilskulawiak.jetlagtracker.challenge;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nilskulawiak.jetlagtracker.action.GameActionService;
 import com.nilskulawiak.jetlagtracker.action.GameActionType;
+import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
 import com.nilskulawiak.jetlagtracker.game.Game;
 import com.nilskulawiak.jetlagtracker.game.GameRepository;
 import com.nilskulawiak.jetlagtracker.game.GameStatus;
 import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
-import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +27,7 @@ public class ChallengeService {
     private final TeamRepository teamRepository;
     private final ChallengeAttemptRepository challengeAttemptRepository;
     private final GameActionService gameActionService;
+    private int numberOfChallengesMadeAvailable = 2; 
 
     public void deleteChallenge(UUID gameId, UUID challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId)
@@ -194,7 +195,7 @@ public class ChallengeService {
         }
 
         challenge.setStatus(ChallengeStatus.DONE);
-        makeRandomChallengeAvailable(challenge.getGame());
+        makeRandomChallengesAvailable(challenge.getGame(), numberOfChallengesMadeAvailable);
 
         gameActionService.log(
                 game,
@@ -236,11 +237,12 @@ public class ChallengeService {
 
         attempt.setStatus(ChallengeAttemptStatus.FAILED);
 
-        challenge.setReward((int) Math.ceil(challenge.getReward() * 1.5));
+        double increaseRewardOnFail = 1.5;
+        challenge.setReward((int) Math.ceil(challenge.getReward() * increaseRewardOnFail));
 
         if (allTeamsFailed(challenge)) {
             challenge.setStatus(ChallengeStatus.DONE);
-            makeRandomChallengeAvailable(challenge.getGame());
+            makeRandomChallengesAvailable(challenge.getGame(), numberOfChallengesMadeAvailable);
         }
 
         gameActionService.log(
@@ -269,15 +271,17 @@ public class ChallengeService {
         return teamsInGame > 0 && failedAttempts >= teamsInGame;
     }
 
-    private void makeRandomChallengeAvailable(Game game) {
+    private void makeRandomChallengesAvailable(Game game, int count) {
         List<Challenge> createdChallenges = challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED);
 
         if (createdChallenges.isEmpty()) {
             return;
         }
 
-        Challenge nextChallenge = createdChallenges.get(ThreadLocalRandom.current().nextInt(createdChallenges.size()));
-        nextChallenge.setStatus(ChallengeStatus.AVAILABLE);
+        Collections.shuffle(createdChallenges);
+        createdChallenges.stream()
+            .limit(count)
+            .forEach(c -> c.setStatus(ChallengeStatus.AVAILABLE));
     }
 
     private int applyStealReward(Challenge challenge, Team team, UUID enemyTeamId) {
