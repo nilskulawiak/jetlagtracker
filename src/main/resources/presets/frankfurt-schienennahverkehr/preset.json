@@ -5,88 +5,1281 @@
   "mapHeight": 2994,
   "mapImage": "frankfurt.png",
   "stations": [
-    { "name": "Darmstadt Hbf",                  "xCoordinate":  543, "yCoordinate": 2904 },
-    { "name": "Riedstadt-Goddelau",             "xCoordinate":  452, "yCoordinate": 2395 },
-    { "name": "Flughafen Regionalbahnhof",      "xCoordinate":  633, "yCoordinate": 1887 },
-    { "name": "Kronberg",                       "xCoordinate":  181, "yCoordinate":  674 },
-    { "name": "Kronberg Süd",                   "xCoordinate":  211, "yCoordinate":  734 },
-    { "name": "Bad Soden",                      "xCoordinate":  121, "yCoordinate":  793 },
-    { "name": "Niederhöchstadt",                "xCoordinate":  302, "yCoordinate":  764 },
-    { "name": "Schwalbach Nord",                "xCoordinate":   91, "yCoordinate":  823 },
-    { "name": "Rödelheim",                      "xCoordinate":  875, "yCoordinate": 1228 },
-    { "name": "Galluswarte",                    "xCoordinate": 1071, "yCoordinate": 1467 },
-    { "name": "Frankfurt Hbf",                  "xCoordinate": 1146, "yCoordinate": 1467 },
-    { "name": "Taunusanlage",                   "xCoordinate": 1192, "yCoordinate": 1377 },
-    { "name": "Hauptwache",                     "xCoordinate": 1207, "yCoordinate": 1377 },
-    { "name": "Konstablerwache",                "xCoordinate": 1297, "yCoordinate": 1377 },
-    { "name": "Ostbahnhof",                     "xCoordinate": 1478, "yCoordinate": 1467 },
-    { "name": "Frankfurt Ost",                  "xCoordinate": 1569, "yCoordinate": 1467 },
-    { "name": "Mühlheim",                       "xCoordinate": 1871, "yCoordinate": 1467 },
-    { "name": "Oberursel Hohemark",             "xCoordinate":  121, "yCoordinate":  359 },
-    { "name": "Rosengärtchen",                  "xCoordinate":  166, "yCoordinate":  404 },
-    { "name": "Kupferberg",                     "xCoordinate":  196, "yCoordinate":  449 },
-    { "name": "Wald Lust",                      "xCoordinate":  196, "yCoordinate":  473 },
-    { "name": "Oberursel Bahnhof",              "xCoordinate":  241, "yCoordinate":  524 },
-    { "name": "Oberursel Altstadt",             "xCoordinate":  256, "yCoordinate":  554 },
-    { "name": "Oberursel Stadtmitte",           "xCoordinate":  256, "yCoordinate":  584 },
-    { "name": "Bommersheim",                    "xCoordinate":  814, "yCoordinate":  569 },
-    { "name": "Bad Homburg Gonzenheim",         "xCoordinate":  995, "yCoordinate":  120 },
-    { "name": "Bad Homburg",                    "xCoordinate":  995, "yCoordinate":  180 },
-    { "name": "Stierstadt",                     "xCoordinate":  814, "yCoordinate":  494 },
-    { "name": "Weißkirchen/Steinbach",          "xCoordinate":  875, "yCoordinate":  464 },
-    { "name": "Ober-Eschbach",                  "xCoordinate": 1207, "yCoordinate":  240 },
-    { "name": "Nieder-Eschbach",                "xCoordinate": 1237, "yCoordinate":  284 },
-    { "name": "Preungesheim",                   "xCoordinate": 1509, "yCoordinate":  284 },
-    { "name": "Berkersheim",                    "xCoordinate": 1690, "yCoordinate":  314 },
-    { "name": "Enkheim",                        "xCoordinate": 1961, "yCoordinate": 1318 },
-    { "name": "Seckbacher Landstr.",            "xCoordinate": 1599, "yCoordinate": 1303 },
-    { "name": "Riedberg",                       "xCoordinate":  965, "yCoordinate":  749 },
-    { "name": "Uni Campus Riedberg",            "xCoordinate":  995, "yCoordinate":  794 },
-    { "name": "Hausen",                         "xCoordinate":  844, "yCoordinate": 1093 },
-    { "name": "Praunheim Heerstr.",             "xCoordinate":  844, "yCoordinate": 1033 },
-    { "name": "Industriehof",                   "xCoordinate":  875, "yCoordinate": 1063 },
-    { "name": "Kirchplatz",                     "xCoordinate":  875, "yCoordinate": 1078 },
-    { "name": "Ginnheim",                       "xCoordinate":  905, "yCoordinate": 1108 },
-    { "name": "Nordwestzentrum",                "xCoordinate":  965, "yCoordinate":  838 },
-    { "name": "Lahnstr.",                       "xCoordinate":  905, "yCoordinate":  689 },
-    { "name": "Wiesenau",                       "xCoordinate":  935, "yCoordinate":  719 },
-    { "name": "Heddernheimer Landstr.",         "xCoordinate":  935, "yCoordinate":  749 },
-    { "name": "Zeilweg",                        "xCoordinate":  965, "yCoordinate":  779 },
-    { "name": "Heddernheim",                    "xCoordinate":  995, "yCoordinate":  794 },
-    { "name": "Eschersheim",                    "xCoordinate":  995, "yCoordinate":  838 },
-    { "name": "Weißer Stein",                   "xCoordinate": 1026, "yCoordinate":  868 },
-    { "name": "Bockenheimer Warte",             "xCoordinate": 1086, "yCoordinate": 1318 },
-    { "name": "Westend",                        "xCoordinate": 1116, "yCoordinate": 1303 },
-    { "name": "Holzhausenstr.",                 "xCoordinate": 1237, "yCoordinate": 1258 },
-    { "name": "Eschenheimer Tor",               "xCoordinate": 1207, "yCoordinate": 1288 },
-    { "name": "Nibelungenplatz/FH",             "xCoordinate": 1237, "yCoordinate": 1303 },
-    { "name": "Alte Oper",                      "xCoordinate": 1177, "yCoordinate": 1318 },
-    { "name": "Dom/Römer",                      "xCoordinate": 1207, "yCoordinate": 1422 },
-    { "name": "Willy-Brandt-Platz",             "xCoordinate": 1207, "yCoordinate": 1437 },
-    { "name": "Glauburgstr.",                   "xCoordinate": 1327, "yCoordinate": 1288 },
-    { "name": "Bornheim Mitte",                 "xCoordinate": 1418, "yCoordinate": 1318 },
-    { "name": "Hessencenter",                   "xCoordinate": 1780, "yCoordinate": 1288 },
-    { "name": "Südbahnhof",                     "xCoordinate": 1177, "yCoordinate": 1587 },
-    { "name": "Habsburgerallee/Wittelsbachallee", "xCoordinate": 1509, "yCoordinate": 1377 },
-    { "name": "Höchst",                         "xCoordinate":  422, "yCoordinate": 1557 },
-    { "name": "Schwanheim Rheinlandstr.",        "xCoordinate":  754, "yCoordinate": 1827 },
-    { "name": "Stadion",                        "xCoordinate": 1207, "yCoordinate": 2036 },
-    { "name": "Neu-Isenburg Stadtgrenze",       "xCoordinate": 1297, "yCoordinate": 2096 },
-    { "name": "Fechenheim Post",                "xCoordinate": 2142, "yCoordinate": 1407 },
-    { "name": "Alt-Fechenheim",                 "xCoordinate": 2202, "yCoordinate": 1377 },
-    { "name": "Friedberg",                      "xCoordinate": 2233, "yCoordinate":   45 },
-    { "name": "Groß Karben",                    "xCoordinate": 2172, "yCoordinate":  105 },
-    { "name": "Friedrichsdorf",                 "xCoordinate": 2112, "yCoordinate":   90 },
-    { "name": "Bad Vilbel",                     "xCoordinate": 1840, "yCoordinate":  240 },
-    { "name": "Bad Vilbel Süd",                 "xCoordinate": 1870, "yCoordinate":  270 },
-    { "name": "Hanau Hbf",                      "xCoordinate": 2776, "yCoordinate": 1527 },
-    { "name": "Hanau Bf",                       "xCoordinate": 2720, "yCoordinate": 1527 },
-    { "name": "Heusenstamm",                    "xCoordinate": 2323, "yCoordinate": 1497 },
-    { "name": "Offenbach Ost",                  "xCoordinate": 2052, "yCoordinate": 1497 },
-    { "name": "Offenbach Marktplatz",           "xCoordinate": 1901, "yCoordinate": 1482 },
-    { "name": "Rödermark Ober-Roden",           "xCoordinate": 1961, "yCoordinate": 2695 },
-    { "name": "Dietzenbach",                    "xCoordinate": 2293, "yCoordinate": 2605 },
-    { "name": "Langen",                         "xCoordinate":  814, "yCoordinate": 2605 }
+    {
+      "name": "Offenbach (Main) Ost",
+      "xCoordinate": 2803,
+      "yCoordinate": 2035
+    },
+    {
+      "name": "Galluswarte",
+      "xCoordinate": 1300,
+      "yCoordinate": 2029
+    },
+    {
+      "name": "Hauptwache",
+      "xCoordinate": 1663,
+      "yCoordinate": 1851
+    },
+    {
+      "name": "Marktplatz",
+      "xCoordinate": 2602,
+      "yCoordinate": 1997
+    },
+    {
+      "name": "Frankfurt-Rödelheim",
+      "xCoordinate": 893,
+      "yCoordinate": 1671
+    },
+    {
+      "name": "Schwalbach Nord",
+      "xCoordinate": 120,
+      "yCoordinate": 1082
+    },
+    {
+      "name": "Kronberg Süd",
+      "xCoordinate": 59,
+      "yCoordinate": 856
+    },
+    {
+      "name": "Niederhöchstadt",
+      "xCoordinate": 258,
+      "yCoordinate": 1202
+    },
+    {
+      "name": "Seckbacher Landstraße",
+      "xCoordinate": 2020,
+      "yCoordinate": 1495
+    },
+    {
+      "name": "Nieder-Eschbach",
+      "xCoordinate": 1568,
+      "yCoordinate": 421
+    },
+    {
+      "name": "Ober-Eschbach",
+      "xCoordinate": 1350,
+      "yCoordinate": 155
+    },
+    {
+      "name": "Bad Homburg",
+      "xCoordinate": 1035,
+      "yCoordinate": 69
+    },
+    {
+      "name": "Gonzenheim",
+      "xCoordinate": 1249,
+      "yCoordinate": 86
+    },
+    {
+      "name": "Frankfurt-Berkersheim",
+      "xCoordinate": 1858,
+      "yCoordinate": 821
+    },
+    {
+      "name": "Bad Vilbel Süd",
+      "xCoordinate": 2254,
+      "yCoordinate": 759
+    },
+    {
+      "name": "Bad Vilbel",
+      "xCoordinate": 2316,
+      "yCoordinate": 593
+    },
+    {
+      "name": "Frankfurt am Main Stadion",
+      "xCoordinate": 1179,
+      "yCoordinate": 2609
+    },
+    {
+      "name": "Zuckschwerdtstraße",
+      "xCoordinate": 314,
+      "yCoordinate": 2035
+    },
+    {
+      "name": "Frankfurt am Main Flughafen Regionalbahnhof",
+      "xCoordinate": 510,
+      "yCoordinate": 2901
+    },
+    {
+      "name": "Rheinlandstraße",
+      "xCoordinate": 616,
+      "yCoordinate": 2378
+    },
+    {
+      "name": "Konstablerwache",
+      "xCoordinate": 1751,
+      "yCoordinate": 1835
+    },
+    {
+      "name": "Willy-Brandt-Platz",
+      "xCoordinate": 1631,
+      "yCoordinate": 1935
+    },
+    {
+      "name": "Taunusanlage",
+      "xCoordinate": 1557,
+      "yCoordinate": 1865
+    },
+    {
+      "name": "Dom/Römer",
+      "xCoordinate": 1720,
+      "yCoordinate": 1905
+    },
+    {
+      "name": "Südbahnhof",
+      "xCoordinate": 1745,
+      "yCoordinate": 2095
+    },
+    {
+      "name": "Bockenheimer Warte",
+      "xCoordinate": 1400,
+      "yCoordinate": 1752
+    },
+    {
+      "name": "Westend",
+      "xCoordinate": 1495,
+      "yCoordinate": 1778
+    },
+    {
+      "name": "Alte Oper",
+      "xCoordinate": 1576,
+      "yCoordinate": 1822
+    },
+    {
+      "name": "Eschenheimer Tor",
+      "xCoordinate": 1671,
+      "yCoordinate": 1790
+    },
+    {
+      "name": "Ostbahnhof",
+      "xCoordinate": 1969,
+      "yCoordinate": 1868
+    },
+    {
+      "name": "Enkheim",
+      "xCoordinate": 2477,
+      "yCoordinate": 1372
+    },
+    {
+      "name": "Bornheim Mitte",
+      "xCoordinate": 1981,
+      "yCoordinate": 1638
+    },
+    {
+      "name": "Glauburgstr.",
+      "xCoordinate": 1742,
+      "yCoordinate": 1637
+    },
+    {
+      "name": "Preungesheim",
+      "xCoordinate": 1759,
+      "yCoordinate": 1108
+    },
+    {
+      "name": "Oberursel Stadtmitte",
+      "xCoordinate": 667,
+      "yCoordinate": 370
+    },
+    {
+      "name": "Oberursel Altstadt",
+      "xCoordinate": 588,
+      "yCoordinate": 305
+    },
+    {
+      "name": "Oberursel Bahnhof",
+      "xCoordinate": 691,
+      "yCoordinate": 419
+    },
+    {
+      "name": "Wald Lust",
+      "xCoordinate": 203,
+      "yCoordinate": 160
+    },
+    {
+      "name": "Heddernheimer Landstr.",
+      "xCoordinate": 1188,
+      "yCoordinate": 1014
+    },
+    {
+      "name": "Kupferhammer",
+      "xCoordinate": 359,
+      "yCoordinate": 165
+    },
+    {
+      "name": "Rosengärtchen",
+      "xCoordinate": 265,
+      "yCoordinate": 160
+    },
+    {
+      "name": "Hohemark",
+      "xCoordinate": 141,
+      "yCoordinate": 147
+    },
+    {
+      "name": "Bommersheim",
+      "xCoordinate": 739,
+      "yCoordinate": 512
+    },
+    {
+      "name": "Riedberg",
+      "xCoordinate": 1201,
+      "yCoordinate": 750
+    },
+    {
+      "name": "Zeilweg",
+      "xCoordinate": 1282,
+      "yCoordinate": 1005
+    },
+    {
+      "name": "Uni Campus Riedberg",
+      "xCoordinate": 1132,
+      "yCoordinate": 807
+    },
+    {
+      "name": "Weißkirchen/Steinbach",
+      "xCoordinate": 676,
+      "yCoordinate": 847
+    },
+    {
+      "name": "Stierstadt",
+      "xCoordinate": 649,
+      "yCoordinate": 635
+    },
+    {
+      "name": "Lahnstraße",
+      "xCoordinate": 503,
+      "yCoordinate": 237
+    },
+    {
+      "name": "Wiesenau",
+      "xCoordinate": 1134,
+      "yCoordinate": 959
+    },
+    {
+      "name": "Nordwestzentrum",
+      "xCoordinate": 1187,
+      "yCoordinate": 1104
+    },
+    {
+      "name": "Frankfurt-Eschersheim",
+      "xCoordinate": 1410,
+      "yCoordinate": 1094
+    },
+    {
+      "name": "Weißer Stein",
+      "xCoordinate": 1426,
+      "yCoordinate": 1140
+    },
+    {
+      "name": "Heddernheim",
+      "xCoordinate": 1350,
+      "yCoordinate": 1044
+    },
+    {
+      "name": "Ginnheim Mitte",
+      "xCoordinate": 1310,
+      "yCoordinate": 1401
+    },
+    {
+      "name": "Hausen",
+      "xCoordinate": 1079,
+      "yCoordinate": 1454
+    },
+    {
+      "name": "Industriehof",
+      "xCoordinate": 1128,
+      "yCoordinate": 1595
+    },
+    {
+      "name": "Kirchplatz",
+      "xCoordinate": 1225,
+      "yCoordinate": 1665
+    },
+    {
+      "name": "Heerstraße",
+      "xCoordinate": 899,
+      "yCoordinate": 1344
+    },
+    {
+      "name": "Alt-Fechenheim",
+      "xCoordinate": 2618,
+      "yCoordinate": 1623
+    },
+    {
+      "name": "Frankfurt (Main) Hauptbahnhof",
+      "xCoordinate": 1495,
+      "yCoordinate": 1977
+    },
+    {
+      "name": "Frankfurter Berg",
+      "xCoordinate": 1646,
+      "yCoordinate": 908
+    },
+    {
+      "name": "Dortelweil",
+      "xCoordinate": 2443,
+      "yCoordinate": 281
+    },
+    {
+      "name": "Kalbach",
+      "xCoordinate": 1434,
+      "yCoordinate": 692
+    },
+    {
+      "name": "Bonames Mitte",
+      "xCoordinate": 1515,
+      "yCoordinate": 658
+    },
+    {
+      "name": "Niederursel",
+      "xCoordinate": 1056,
+      "yCoordinate": 925
+    },
+    {
+      "name": "Weißkirchen Ost",
+      "xCoordinate": 848,
+      "yCoordinate": 652
+    },
+    {
+      "name": "Riedwiese/Mertonviertel",
+      "xCoordinate": 1272,
+      "yCoordinate": 872
+    },
+    {
+      "name": "Neu-Isenburg Stadtgrenze",
+      "xCoordinate": 1831,
+      "yCoordinate": 2769
+    },
+    {
+      "name": "Ferdinand-Dirichs-Weg",
+      "xCoordinate": 695,
+      "yCoordinate": 2379
+    },
+    {
+      "name": "Harthweg",
+      "xCoordinate": 766,
+      "yCoordinate": 2398
+    },
+    {
+      "name": "Waldfriedhof Goldstein",
+      "xCoordinate": 851,
+      "yCoordinate": 2462
+    },
+    {
+      "name": "Waldau",
+      "xCoordinate": 933,
+      "yCoordinate": 2470
+    },
+    {
+      "name": "Kiesschneise",
+      "xCoordinate": 1019,
+      "yCoordinate": 2482
+    },
+    {
+      "name": "Bürostadt Niederrad",
+      "xCoordinate": 1111,
+      "yCoordinate": 2448
+    },
+    {
+      "name": "Neu-Isenburg",
+      "xCoordinate": 1517,
+      "yCoordinate": 2886
+    },
+    {
+      "name": "Oberschweinstiege",
+      "xCoordinate": 1673,
+      "yCoordinate": 2591
+    },
+    {
+      "name": "Stadion Straßenbahn",
+      "xCoordinate": 1381,
+      "yCoordinate": 2505
+    },
+    {
+      "name": "Oberforsthaus",
+      "xCoordinate": 1395,
+      "yCoordinate": 2431
+    },
+    {
+      "name": "Louisa",
+      "xCoordinate": 1578,
+      "yCoordinate": 2342
+    },
+    {
+      "name": "DFB-Campus",
+      "xCoordinate": 1364,
+      "yCoordinate": 2356
+    },
+    {
+      "name": "Haardtwaldplatz",
+      "xCoordinate": 1211,
+      "yCoordinate": 2312
+    },
+    {
+      "name": "Odenwaldstraße",
+      "xCoordinate": 1268,
+      "yCoordinate": 2310
+    },
+    {
+      "name": "Frankfurt-Höchst",
+      "xCoordinate": 204,
+      "yCoordinate": 2045
+    },
+    {
+      "name": "Frankfurt (Main) West",
+      "xCoordinate": 1245,
+      "yCoordinate": 1769
+    },
+    {
+      "name": "An der Dammheide",
+      "xCoordinate": 1157,
+      "yCoordinate": 1796
+    },
+    {
+      "name": "Rebstockbad",
+      "xCoordinate": 1027,
+      "yCoordinate": 1851
+    },
+    {
+      "name": "Offenbach Stadtgrenze",
+      "xCoordinate": 2367,
+      "yCoordinate": 2053
+    },
+    {
+      "name": "Schießhüttenstraße",
+      "xCoordinate": 2683,
+      "yCoordinate": 1728
+    },
+    {
+      "name": "Römerstadt",
+      "xCoordinate": 1228,
+      "yCoordinate": 1192
+    },
+    {
+      "name": "Ginnheim/Niddapark",
+      "xCoordinate": 1273,
+      "yCoordinate": 1351
+    },
+    {
+      "name": "Lindenbaum",
+      "xCoordinate": 1481,
+      "yCoordinate": 1207
+    },
+    {
+      "name": "Hügelstraße",
+      "xCoordinate": 1528,
+      "yCoordinate": 1283
+    },
+    {
+      "name": "Gravensteiner-Platz",
+      "xCoordinate": 1885,
+      "yCoordinate": 1161
+    },
+    {
+      "name": "Hessen-Center",
+      "xCoordinate": 2418,
+      "yCoordinate": 1409
+    },
+    {
+      "name": "Mainkur Bahnhof",
+      "xCoordinate": 2607,
+      "yCoordinate": 1539
+    },
+    {
+      "name": "Ledermuseum",
+      "xCoordinate": 2430,
+      "yCoordinate": 1988
+    },
+    {
+      "name": "Kaiserlei",
+      "xCoordinate": 2286,
+      "yCoordinate": 2001
+    },
+    {
+      "name": "Adalbert-/Schloßstraße",
+      "xCoordinate": 1296,
+      "yCoordinate": 1760
+    },
+    {
+      "name": "Feuerwehrstraße",
+      "xCoordinate": 1805,
+      "yCoordinate": 1348
+    },
+    {
+      "name": "Marbachweg/Sozialzentrum",
+      "xCoordinate": 1726,
+      "yCoordinate": 1376
+    },
+    {
+      "name": "Deutsche Nationalbibliothek",
+      "xCoordinate": 1721,
+      "yCoordinate": 1563
+    },
+    {
+      "name": "Festhalle/Messe",
+      "xCoordinate": 1418,
+      "yCoordinate": 1888
+    },
+    {
+      "name": "Nied",
+      "xCoordinate": 511,
+      "yCoordinate": 2046
+    },
+    {
+      "name": "Griesheim",
+      "xCoordinate": 880,
+      "yCoordinate": 2179
+    },
+    {
+      "name": "Leipziger Straße",
+      "xCoordinate": 1307,
+      "yCoordinate": 1705
+    },
+    {
+      "name": "Große Nelkenstraße",
+      "xCoordinate": 1122,
+      "yCoordinate": 1530
+    },
+    {
+      "name": "Fischstein",
+      "xCoordinate": 1088,
+      "yCoordinate": 1591
+    },
+    {
+      "name": "Hausener Weg",
+      "xCoordinate": 1031,
+      "yCoordinate": 1557
+    },
+    {
+      "name": "Friedhof Westhausen",
+      "xCoordinate": 954,
+      "yCoordinate": 1432
+    },
+    {
+      "name": "Eschborn",
+      "xCoordinate": 396,
+      "yCoordinate": 1351
+    },
+    {
+      "name": "Schwalbach Limes",
+      "xCoordinate": 44,
+      "yCoordinate": 1171
+    },
+    {
+      "name": "Sossenheim",
+      "xCoordinate": 320,
+      "yCoordinate": 1834
+    },
+    {
+      "name": "Sulzbach",
+      "xCoordinate": 45,
+      "yCoordinate": 1583
+    },
+    {
+      "name": "Stephan-Heise-Straße",
+      "xCoordinate": 979,
+      "yCoordinate": 1475
+    },
+    {
+      "name": "Johanna-Tesch-Platz",
+      "xCoordinate": 2169,
+      "yCoordinate": 1621
+    },
+    {
+      "name": "Gwinnerstraße",
+      "xCoordinate": 2335,
+      "yCoordinate": 1522
+    },
+    {
+      "name": "Kruppstraße",
+      "xCoordinate": 2371,
+      "yCoordinate": 1450
+    },
+    {
+      "name": "Parlamentsplatz",
+      "xCoordinate": 2039,
+      "yCoordinate": 1749
+    },
+    {
+      "name": "Eissporthalle/Festplatz",
+      "xCoordinate": 2087,
+      "yCoordinate": 1678
+    },
+    {
+      "name": "Heusenstamm",
+      "xCoordinate": 2993,
+      "yCoordinate": 2758
+    },
+    {
+      "name": "Bad Vilbel-Gronau",
+      "xCoordinate": 2787,
+      "yCoordinate": 549
+    },
+    {
+      "name": "Beuthener Straße",
+      "xCoordinate": 1623,
+      "yCoordinate": 2225
+    },
+    {
+      "name": "Stresemannallee/Mörfelder Landstraße",
+      "xCoordinate": 1588,
+      "yCoordinate": 2267
+    },
+    {
+      "name": "Buchrainplatz",
+      "xCoordinate": 2153,
+      "yCoordinate": 2078
+    },
+    {
+      "name": "Mühlberg",
+      "xCoordinate": 1889,
+      "yCoordinate": 2053
+    },
+    {
+      "name": "Baseler Platz",
+      "xCoordinate": 1515,
+      "yCoordinate": 2010
+    },
+    {
+      "name": "Hauptbahnhof",
+      "xCoordinate": 1510,
+      "yCoordinate": 1951
+    },
+    {
+      "name": "Platz der Republik",
+      "xCoordinate": 1474,
+      "yCoordinate": 1929
+    },
+    {
+      "name": "Hohenstaufenstraße",
+      "xCoordinate": 1436,
+      "yCoordinate": 1902
+    },
+    {
+      "name": "Varrentrappstraße",
+      "xCoordinate": 1326,
+      "yCoordinate": 1826
+    },
+    {
+      "name": "Ludwig-Erhard-Anlage",
+      "xCoordinate": 1357,
+      "yCoordinate": 1848
+    },
+    {
+      "name": "Nauheimer Straße",
+      "xCoordinate": 1290,
+      "yCoordinate": 1801
+    },
+    {
+      "name": "Markus-Krankenhaus",
+      "xCoordinate": 1309,
+      "yCoordinate": 1469
+    },
+    {
+      "name": "Mönchhofstraße",
+      "xCoordinate": 1011,
+      "yCoordinate": 2076
+    },
+    {
+      "name": "Jägerallee",
+      "xCoordinate": 714,
+      "yCoordinate": 2082
+    },
+    {
+      "name": "Birminghamstraße",
+      "xCoordinate": 584,
+      "yCoordinate": 2085
+    },
+    {
+      "name": "Nied Kirche",
+      "xCoordinate": 470,
+      "yCoordinate": 2111
+    },
+    {
+      "name": "Tillystraße",
+      "xCoordinate": 392,
+      "yCoordinate": 2060
+    },
+    {
+      "name": "Börneplatz",
+      "xCoordinate": 1759,
+      "yCoordinate": 1877
+    },
+    {
+      "name": "Zobelstraße",
+      "xCoordinate": 1906,
+      "yCoordinate": 1869
+    },
+    {
+      "name": "Ostbahnhof/Sonnemannstraße",
+      "xCoordinate": 1950,
+      "yCoordinate": 1890
+    },
+    {
+      "name": "Ostbahnhof/Honsellstraße",
+      "xCoordinate": 1993,
+      "yCoordinate": 1895
+    },
+    {
+      "name": "Saalburg-/Wittelsbacherallee",
+      "xCoordinate": 2030,
+      "yCoordinate": 1670
+    },
+    {
+      "name": "Arthur-von-Weinberg-Steg",
+      "xCoordinate": 2644,
+      "yCoordinate": 1667
+    },
+    {
+      "name": "Friedberger Platz",
+      "xCoordinate": 1802,
+      "yCoordinate": 1700
+    },
+    {
+      "name": "Heinrich-Hoffmann-Straße/Blutspendedienst",
+      "xCoordinate": 1388,
+      "yCoordinate": 2217
+    },
+    {
+      "name": "Niederrad Bahnhof",
+      "xCoordinate": 1218,
+      "yCoordinate": 2407
+    },
+    {
+      "name": "Lokalbahnhof",
+      "xCoordinate": 1806,
+      "yCoordinate": 2028
+    },
+    {
+      "name": "Allerheiligentor",
+      "xCoordinate": 1829,
+      "yCoordinate": 1862
+    },
+    {
+      "name": "Ostendstraße",
+      "xCoordinate": 1862,
+      "yCoordinate": 1862
+    },
+    {
+      "name": "Hessendenkmal",
+      "xCoordinate": 1779,
+      "yCoordinate": 1768
+    },
+    {
+      "name": "Freiligrathstraße",
+      "xCoordinate": 1998,
+      "yCoordinate": 1716
+    },
+    {
+      "name": "Matthias-Beltz-Platz",
+      "xCoordinate": 1808,
+      "yCoordinate": 1631
+    },
+    {
+      "name": "Osthafenplatz",
+      "xCoordinate": 2038,
+      "yCoordinate": 1886
+    },
+    {
+      "name": "Schwedlerstraße",
+      "xCoordinate": 2099,
+      "yCoordinate": 1853
+    },
+    {
+      "name": "Riederhöfe",
+      "xCoordinate": 2202,
+      "yCoordinate": 1795
+    },
+    {
+      "name": "Daimlerstraße",
+      "xCoordinate": 2330,
+      "yCoordinate": 1706
+    },
+    {
+      "name": "Dieselstraße",
+      "xCoordinate": 2375,
+      "yCoordinate": 1677
+    },
+    {
+      "name": "Hugo-Junkers-Straße",
+      "xCoordinate": 2465,
+      "yCoordinate": 1625
+    },
+    {
+      "name": "Cassellastraße",
+      "xCoordinate": 2529,
+      "yCoordinate": 1592
+    },
+    {
+      "name": "Luthmerstraße",
+      "xCoordinate": 534,
+      "yCoordinate": 2096
+    },
+    {
+      "name": "Linnegraben",
+      "xCoordinate": 781,
+      "yCoordinate": 2081
+    },
+    {
+      "name": "Waldschulstraße",
+      "xCoordinate": 861,
+      "yCoordinate": 2080
+    },
+    {
+      "name": "Universitätsklinikum",
+      "xCoordinate": 1460,
+      "yCoordinate": 2151
+    },
+    {
+      "name": "Triftstraße",
+      "xCoordinate": 1361,
+      "yCoordinate": 2302
+    },
+    {
+      "name": "Gerauer Straße",
+      "xCoordinate": 1304,
+      "yCoordinate": 2354
+    },
+    {
+      "name": "Melibocusstraße",
+      "xCoordinate": 1244,
+      "yCoordinate": 2392
+    },
+    {
+      "name": "Schwabstraße",
+      "xCoordinate": 1702,
+      "yCoordinate": 1336
+    },
+    {
+      "name": "Nibelungenplatz (UAS)",
+      "xCoordinate": 1827,
+      "yCoordinate": 1587
+    },
+    {
+      "name": "Stresemannallee",
+      "xCoordinate": 1581,
+      "yCoordinate": 2182
+    },
+    {
+      "name": "Burgstraße",
+      "xCoordinate": 1945,
+      "yCoordinate": 1622
+    },
+    {
+      "name": "Friedensbrücke",
+      "xCoordinate": 1563,
+      "yCoordinate": 2105
+    },
+    {
+      "name": "Schweizer Platz",
+      "xCoordinate": 1679,
+      "yCoordinate": 2045
+    },
+    {
+      "name": "Eiserner Steg",
+      "xCoordinate": 1701,
+      "yCoordinate": 1934
+    },
+    {
+      "name": "Frankfurt-Mainkur",
+      "xCoordinate": 2617,
+      "yCoordinate": 1507
+    },
+    {
+      "name": "Frankfurt-Höchst Farbwerke",
+      "xCoordinate": 50,
+      "yCoordinate": 2111
+    },
+    {
+      "name": "Kelsterbach",
+      "xCoordinate": 63,
+      "yCoordinate": 2717
+    },
+    {
+      "name": "Hauptfriedhof",
+      "xCoordinate": 1724,
+      "yCoordinate": 1475
+    },
+    {
+      "name": "Juliusstraße",
+      "xCoordinate": 1323,
+      "yCoordinate": 1654
+    },
+    {
+      "name": "Frauenfriedenskirche",
+      "xCoordinate": 1318,
+      "yCoordinate": 1604
+    },
+    {
+      "name": "Schwanthalerstraße",
+      "xCoordinate": 1695,
+      "yCoordinate": 2071
+    },
+    {
+      "name": "Otto-Hahn-Platz",
+      "xCoordinate": 1631,
+      "yCoordinate": 2054
+    },
+    {
+      "name": "Lokalbahnhof/Textorstraße",
+      "xCoordinate": 1782,
+      "yCoordinate": 2042
+    },
+    {
+      "name": "Brücken-/Textorstraße",
+      "xCoordinate": 1753,
+      "yCoordinate": 2056
+    },
+    {
+      "name": "Lettigkautweg",
+      "xCoordinate": 1934,
+      "yCoordinate": 2091
+    },
+    {
+      "name": "Balduinstraße",
+      "xCoordinate": 2053,
+      "yCoordinate": 2096
+    },
+    {
+      "name": "Wiener Straße",
+      "xCoordinate": 2281,
+      "yCoordinate": 2081
+    },
+    {
+      "name": "Bleiweißstraße",
+      "xCoordinate": 2095,
+      "yCoordinate": 2088
+    },
+    {
+      "name": "Heister-/Seehofstraße",
+      "xCoordinate": 1865,
+      "yCoordinate": 2027
+    },
+    {
+      "name": "Flaschenburgstraße",
+      "xCoordinate": 2228,
+      "yCoordinate": 2079
+    },
+    {
+      "name": "Hauptbahnhof/Münchener Straße",
+      "xCoordinate": 1534,
+      "yCoordinate": 1967
+    },
+    {
+      "name": "Hospital zum Heiligen Geist",
+      "xCoordinate": 1814,
+      "yCoordinate": 1910
+    },
+    {
+      "name": "Frankensteiner Platz",
+      "xCoordinate": 1811,
+      "yCoordinate": 1985
+    },
+    {
+      "name": "Weserstraße/Münchener Straße",
+      "xCoordinate": 1576,
+      "yCoordinate": 1950
+    },
+    {
+      "name": "Römer/Paulskirche",
+      "xCoordinate": 1697,
+      "yCoordinate": 1903
+    },
+    {
+      "name": "Vogelweidstraße",
+      "xCoordinate": 1519,
+      "yCoordinate": 2125
+    },
+    {
+      "name": "Niederräder Landstraße",
+      "xCoordinate": 1373,
+      "yCoordinate": 2275
+    },
+    {
+      "name": "Schwarzwaldstraße",
+      "xCoordinate": 1317,
+      "yCoordinate": 2307
+    },
+    {
+      "name": "Heilbronner Straße",
+      "xCoordinate": 1405,
+      "yCoordinate": 2050
+    },
+    {
+      "name": "Hafenstraße",
+      "xCoordinate": 1435,
+      "yCoordinate": 2030
+    },
+    {
+      "name": "Speyerer Straße",
+      "xCoordinate": 1364,
+      "yCoordinate": 1991
+    },
+    {
+      "name": "Güterplatz",
+      "xCoordinate": 1404,
+      "yCoordinate": 1967
+    },
+    {
+      "name": "Rebstöcker Straße",
+      "xCoordinate": 1131,
+      "yCoordinate": 2057
+    },
+    {
+      "name": "Schwalbacher Straße",
+      "xCoordinate": 1211,
+      "yCoordinate": 2046
+    },
+    {
+      "name": "Wickerer Straße",
+      "xCoordinate": 1063,
+      "yCoordinate": 2068
+    },
+    {
+      "name": "Bolongaropalast",
+      "xCoordinate": 312,
+      "yCoordinate": 2057
+    },
+    {
+      "name": "Hugo-Junkers-Straße/Schleife",
+      "xCoordinate": 2475,
+      "yCoordinate": 1648
+    },
+    {
+      "name": "Waldschmidtstraße",
+      "xCoordinate": 1912,
+      "yCoordinate": 1776
+    },
+    {
+      "name": "Rothschildallee",
+      "xCoordinate": 1848,
+      "yCoordinate": 1613
+    },
+    {
+      "name": "Südbahnhof/Schweizer Straße",
+      "xCoordinate": 1718,
+      "yCoordinate": 2119
+    },
+    {
+      "name": "Oppenheimer Landstraße",
+      "xCoordinate": 1693,
+      "yCoordinate": 2164
+    },
+    {
+      "name": "Schweizer Straße/Mörfelder Landstraße",
+      "xCoordinate": 1723,
+      "yCoordinate": 2140
+    },
+    {
+      "name": "Bodenweg",
+      "xCoordinate": 1910,
+      "yCoordinate": 1376
+    },
+    {
+      "name": "Friedberger Warte",
+      "xCoordinate": 1876,
+      "yCoordinate": 1417
+    },
+    {
+      "name": "Münzenberger Straße",
+      "xCoordinate": 1841,
+      "yCoordinate": 1537
+    },
+    {
+      "name": "Alkmenestraße",
+      "xCoordinate": 1890,
+      "yCoordinate": 1218
+    },
+    {
+      "name": "Walter-Kolb-Siedlung",
+      "xCoordinate": 1927,
+      "yCoordinate": 1305
+    },
+    {
+      "name": "Wasserpark",
+      "xCoordinate": 1852,
+      "yCoordinate": 1495
+    },
+    {
+      "name": "Hartmann-Ibach-Straße",
+      "xCoordinate": 1925,
+      "yCoordinate": 1624
+    },
+    {
+      "name": "Günthersburgpark (Jina-Mahsa-Amini-Platz)",
+      "xCoordinate": 1889,
+      "yCoordinate": 1602
+    },
+    {
+      "name": "Karmeliterkloster",
+      "xCoordinate": 1655,
+      "yCoordinate": 1917
+    },
+    {
+      "name": "Börneplatz/Stoltzestraße",
+      "xCoordinate": 1784,
+      "yCoordinate": 1873
+    },
+    {
+      "name": "Offenbach (Main) Hauptbahnhof",
+      "xCoordinate": 2555,
+      "yCoordinate": 2099
+    },
+    {
+      "name": "Frankfurt (Main) Ost",
+      "xCoordinate": 1996,
+      "yCoordinate": 1863
+    },
+    {
+      "name": "Leonardo-da-Vinci-Allee",
+      "xCoordinate": 1107,
+      "yCoordinate": 1858
+    },
+    {
+      "name": "Zoo",
+      "xCoordinate": 1885,
+      "yCoordinate": 1826
+    },
+    {
+      "name": "Kuhwaldstraße",
+      "xCoordinate": 1256,
+      "yCoordinate": 1801
+    },
+    {
+      "name": "Habsburger-/Wittelsbacherallee",
+      "xCoordinate": 1958,
+      "yCoordinate": 1743
+    },
+    {
+      "name": "Unterliederbach",
+      "xCoordinate": 45,
+      "yCoordinate": 1952
+    },
+    {
+      "name": "Ruhrorter Werft",
+      "xCoordinate": 1937,
+      "yCoordinate": 1956
+    },
+    {
+      "name": "Schäfflestraße",
+      "xCoordinate": 2261,
+      "yCoordinate": 1561
+    },
+    {
+      "name": "Ernst-May-Platz",
+      "xCoordinate": 2064,
+      "yCoordinate": 1649
+    },
+    {
+      "name": "Eschborn Süd",
+      "xCoordinate": 585,
+      "yCoordinate": 1520
+    },
+    {
+      "name": "Grüneburgweg",
+      "xCoordinate": 1631,
+      "yCoordinate": 1717
+    },
+    {
+      "name": "Holzhausenstraße",
+      "xCoordinate": 1611,
+      "yCoordinate": 1638
+    },
+    {
+      "name": "Miquel-/Adickesallee",
+      "xCoordinate": 1594,
+      "yCoordinate": 1555
+    },
+    {
+      "name": "Habsburgerallee",
+      "xCoordinate": 1978,
+      "yCoordinate": 1799
+    },
+    {
+      "name": "Merianplatz",
+      "xCoordinate": 1840,
+      "yCoordinate": 1750
+    },
+    {
+      "name": "Höhenstraße",
+      "xCoordinate": 1906,
+      "yCoordinate": 1701
+    },
+    {
+      "name": "Gustavsburgplatz",
+      "xCoordinate": 1147,
+      "yCoordinate": 2075
+    },
+    {
+      "name": "Ordnungsamt",
+      "xCoordinate": 1169,
+      "yCoordinate": 2095
+    },
+    {
+      "name": "Galluspark",
+      "xCoordinate": 1209,
+      "yCoordinate": 2087
+    },
+    {
+      "name": "Kriegkstraße",
+      "xCoordinate": 1247,
+      "yCoordinate": 2064
+    },
+    {
+      "name": "Frankfurt-Gateway Gardens",
+      "xCoordinate": 763,
+      "yCoordinate": 2813
+    },
+    {
+      "name": "Musterschule",
+      "xCoordinate": 1745,
+      "yCoordinate": 1715
+    },
+    {
+      "name": "Sandelmühle",
+      "xCoordinate": 1303,
+      "yCoordinate": 978
+    },
+    {
+      "name": "Fritz-Tarnow-Straße",
+      "xCoordinate": 1556,
+      "yCoordinate": 1366
+    },
+    {
+      "name": "Dornbusch",
+      "xCoordinate": 1581,
+      "yCoordinate": 1463
+    },
+    {
+      "name": "Frankfurt am Main Messe",
+      "xCoordinate": 1285,
+      "yCoordinate": 1884
+    },
+    {
+      "name": "Theobald-Ziegler-Straße",
+      "xCoordinate": 1784,
+      "yCoordinate": 1280
+    },
+    {
+      "name": "Ronneburgstraße",
+      "xCoordinate": 1764,
+      "yCoordinate": 1222
+    },
+    {
+      "name": "Sigmund-Freud-Straße",
+      "xCoordinate": 1743,
+      "yCoordinate": 1165
+    },
+    {
+      "name": "Glöcknerwiese",
+      "xCoordinate": 406,
+      "yCoordinate": 181
+    },
+    {
+      "name": "Breslauer Straße",
+      "xCoordinate": 1654,
+      "yCoordinate": 2199
+    }
   ],
   "challenges": [
     {
