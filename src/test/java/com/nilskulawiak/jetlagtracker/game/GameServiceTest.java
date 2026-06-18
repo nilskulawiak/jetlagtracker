@@ -67,6 +67,7 @@ class GameServiceTest {
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
         when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED))
                 .thenReturn(List.of(c1, c2, c3));
+        when(teamRepository.countByGame(game)).thenReturn(2l);
 
         gameService.startGame(game.getId(), new StartGameRequest(2));
 
