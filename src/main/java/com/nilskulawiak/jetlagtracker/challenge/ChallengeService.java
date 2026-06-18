@@ -27,7 +27,7 @@ public class ChallengeService {
     private final TeamRepository teamRepository;
     private final ChallengeAttemptRepository challengeAttemptRepository;
     private final GameActionService gameActionService;
-    private int numberOfChallengesMadeAvailable = 2; 
+    private final int numberOfChallengesMadeAvailable = 2; 
 
     public void deleteChallenge(UUID gameId, UUID challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId)
