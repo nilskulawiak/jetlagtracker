@@ -10,22 +10,29 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.nilskulawiak.jetlagtracker.action.GameActionRepository;
 import com.nilskulawiak.jetlagtracker.action.GameActionService;
 import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
 import com.nilskulawiak.jetlagtracker.challenge.Challenge;
+import com.nilskulawiak.jetlagtracker.challenge.ChallengeAttemptRepository;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeRepository;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeStatus;
 import com.nilskulawiak.jetlagtracker.challenge.ChallengeType;
+import com.nilskulawiak.jetlagtracker.membership.GameInviteRepository;
+import com.nilskulawiak.jetlagtracker.membership.GameMembershipRepository;
 import com.nilskulawiak.jetlagtracker.preset.ChallengePreset;
 import com.nilskulawiak.jetlagtracker.preset.GamePreset;
 import com.nilskulawiak.jetlagtracker.preset.GamePresetService;
 import com.nilskulawiak.jetlagtracker.preset.StationPreset;
+import com.nilskulawiak.jetlagtracker.station.StationChipStateRepository;
 import com.nilskulawiak.jetlagtracker.station.StationRepository;
 import com.nilskulawiak.jetlagtracker.team.CreateTeamRequest;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
@@ -34,10 +41,15 @@ import com.nilskulawiak.jetlagtracker.team.TeamRepository;
 class GameServiceTest {
 
     @Mock private GameRepository gameRepository;
+    @Mock private GameMembershipRepository membershipRepository;
+    @Mock private GameInviteRepository inviteRepository;
     @Mock private ChallengeRepository challengeRepository;
+    @Mock private ChallengeAttemptRepository challengeAttemptRepository;
     @Mock private StationRepository stationRepository;
+    @Mock private StationChipStateRepository stationChipStateRepository;
     @Mock private TeamRepository teamRepository;
     @Mock private GameActionService gameActionService;
+    @Mock private GameActionRepository gameActionRepository;
     @Mock private GamePresetService gamePresetService;
 
     @InjectMocks
@@ -160,6 +172,31 @@ class GameServiceTest {
         verify(teamRepository, times(2)).save(any());
         verify(stationRepository, times(2)).save(any());
         verify(challengeRepository, times(1)).save(any());
+    }
+
+    @Test
+    void deleteGameRemovesInvitesAndMembershipsBeforeGame() {
+        Game game = gameWithId(UUID.randomUUID(), "Taiwan");
+        when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(challengeRepository.findByGame(game)).thenReturn(List.of());
+        when(stationRepository.findByGame(game)).thenReturn(List.of());
+
+        gameService.deleteGame(game.getId());
+
+        InOrder order = inOrder(inviteRepository, membershipRepository, gameRepository);
+        order.verify(inviteRepository).deleteByGame(game);
+        order.verify(membershipRepository).deleteByGame(game);
+        order.verify(gameRepository).delete(game);
+    }
+
+    @Test
+    void deleteGameThrowsWhenGameNotFound() {
+        UUID id = UUID.randomUUID();
+        when(gameRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> gameService.deleteGame(id))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Game not found");
     }
 
     private static Game gameWithId(UUID id, String name) {
