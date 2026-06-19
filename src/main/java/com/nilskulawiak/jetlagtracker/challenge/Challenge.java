@@ -42,7 +42,7 @@ public class Challenge {
     @Column(nullable = false)
     private ChallengeStatus status = ChallengeStatus.CREATED;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 4096)
     private String description;
 
     @Column(nullable = false)
