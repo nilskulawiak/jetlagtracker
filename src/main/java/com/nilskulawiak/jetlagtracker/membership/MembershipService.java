@@ -4,6 +4,7 @@ import com.nilskulawiak.jetlagtracker.common.exception.ForbiddenException;
 import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
 import com.nilskulawiak.jetlagtracker.game.Game;
 import com.nilskulawiak.jetlagtracker.game.GameRepository;
+import com.nilskulawiak.jetlagtracker.game.GameResponse;
 import com.nilskulawiak.jetlagtracker.team.Team;
 import com.nilskulawiak.jetlagtracker.team.TeamRepository;
 import com.nilskulawiak.jetlagtracker.user.AppUser;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -80,6 +82,26 @@ public class MembershipService {
         invite.setCreatedBy(host);
         invite.setInviteCode(generateUniqueCode());
         return inviteRepository.save(invite);
+    }
+
+    @Transactional
+    public GameMembership createHostMembership(AppUser user, UUID gameId) {
+        Game game = gameRepository.findById(gameId)
+            .orElseThrow(() -> new NotFoundException("Game not found"));
+        return createHostMembership(user, game);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameMembershipResponse> getMyMemberships(AppUser user) {
+        return membershipRepository.findByUser(user).stream()
+            .map(m -> new GameMembershipResponse(
+                m.getGame().getId(),
+                m.getRole(),
+                m.getTeam() != null ? m.getTeam().getId() : null,
+                m.getTeam() != null ? m.getTeam().getName() : null,
+                GameResponse.from(m.getGame())
+            ))
+            .toList();
     }
 
     private String generateUniqueCode() {

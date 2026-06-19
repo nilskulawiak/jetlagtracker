@@ -36,6 +36,8 @@ import com.nilskulawiak.jetlagtracker.team.TeamRepository;
 import com.nilskulawiak.jetlagtracker.team.TeamResponse;
 
 import com.nilskulawiak.jetlagtracker.common.exception.NotFoundException;
+import com.nilskulawiak.jetlagtracker.membership.GameInviteRepository;
+import com.nilskulawiak.jetlagtracker.membership.GameMembershipRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,6 +46,8 @@ import lombok.RequiredArgsConstructor;
 public class GameService {
 
     private final GameRepository gameRepository;
+    private final GameMembershipRepository membershipRepository;
+    private final GameInviteRepository inviteRepository;
     private final ChallengeRepository challengeRepository;
     private final ChallengeAttemptRepository challengeAttemptRepository;
     private final StationRepository stationRepository;
@@ -171,6 +175,8 @@ public class GameService {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new NotFoundException("Game not found"));
 
+        inviteRepository.deleteByGame(game);
+        membershipRepository.deleteByGame(game);
         gameActionRepository.deleteByGame(game);
         challengeRepository.findByGame(game).forEach(challengeAttemptRepository::deleteByChallenge);
         challengeRepository.deleteByGame(game);

@@ -1,8 +1,13 @@
 package com.nilskulawiak.jetlagtracker.game;
 
-import java.util.UUID;
-
+import com.nilskulawiak.jetlagtracker.membership.MembershipAuthHelper;
+import com.nilskulawiak.jetlagtracker.membership.MembershipService;
+import com.nilskulawiak.jetlagtracker.user.AppUser;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,8 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/games")
@@ -22,51 +26,66 @@ import lombok.RequiredArgsConstructor;
 public class GameController {
 
     private final GameService gameService;
+    private final MembershipService membershipService;
+    private final MembershipAuthHelper authHelper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public GameResponse createGame(@Valid @RequestBody CreateGameRequest request) {
-        return gameService.createGame(request);
-    }
-
-    @PostMapping("{gameId}/start")
-    @ResponseStatus(HttpStatus.OK)
-    public GameResponse startGame(@PathVariable UUID gameId, @Valid @RequestBody StartGameRequest request) {
-        return gameService.startGame(gameId, request);
-    }
-
-    @PostMapping("{gameId}/finish")
-    @ResponseStatus(HttpStatus.OK)
-    public GameResponse finishGame(@PathVariable UUID gameId) {
-        return gameService.finishGame(gameId);
-    }
-
-    @GetMapping("/{gameId}/state")
-    public GameStateResponse getGameState(@PathVariable UUID gameId) {
-        return gameService.getGameState(gameId);
-    }
-
-    @GetMapping()
-    public GamesResponse getGames() {
-        return gameService.getGames();
-    }
-
-    @DeleteMapping("{gameId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteGame(@PathVariable UUID gameId) {
-        gameService.deleteGame(gameId);
-    }
-
-    @PatchMapping("{gameId}")
-    public GameResponse patchGame(@PathVariable UUID gameId, @Valid @RequestBody PatchGameRequest request) {
-        return gameService.patchGame(gameId, request);
+    @Transactional
+    public GameResponse createGame(@AuthenticationPrincipal AppUser user,
+                                   @Valid @RequestBody CreateGameRequest request) {
+        GameResponse game = gameService.createGame(request);
+        membershipService.createHostMembership(user, game.id());
+        return game;
     }
 
     @PostMapping("/from-preset")
     @ResponseStatus(HttpStatus.CREATED)
-    public GameResponse createGameFromPreset(
-            @Valid @RequestBody CreateGameFromPresetRequest request
-    ) {
-        return gameService.createGameFromPreset(request);
+    @Transactional
+    public GameResponse createGameFromPreset(@AuthenticationPrincipal AppUser user,
+                                             @Valid @RequestBody CreateGameFromPresetRequest request) {
+        GameResponse game = gameService.createGameFromPreset(request);
+        membershipService.createHostMembership(user, game.id());
+        return game;
+    }
+
+    @PostMapping("/{gameId}/start")
+    @ResponseStatus(HttpStatus.OK)
+    public GameResponse startGame(@AuthenticationPrincipal AppUser user,
+                                  @PathVariable UUID gameId,
+                                  @Valid @RequestBody StartGameRequest request) {
+        authHelper.requireHost(user, gameId);
+        return gameService.startGame(gameId, request);
+    }
+
+    @PostMapping("/{gameId}/finish")
+    @ResponseStatus(HttpStatus.OK)
+    public GameResponse finishGame(@AuthenticationPrincipal AppUser user,
+                                   @PathVariable UUID gameId) {
+        authHelper.requireHost(user, gameId);
+        return gameService.finishGame(gameId);
+    }
+
+    @GetMapping("/{gameId}/state")
+    public GameStateResponse getGameState(@AuthenticationPrincipal AppUser user,
+                                          @PathVariable UUID gameId) {
+        authHelper.requireMember(user, gameId);
+        return gameService.getGameState(gameId);
+    }
+
+    @DeleteMapping("/{gameId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteGame(@AuthenticationPrincipal AppUser user,
+                           @PathVariable UUID gameId) {
+        authHelper.requireHost(user, gameId);
+        gameService.deleteGame(gameId);
+    }
+
+    @PatchMapping("/{gameId}")
+    public GameResponse patchGame(@AuthenticationPrincipal AppUser user,
+                                  @PathVariable UUID gameId,
+                                  @Valid @RequestBody PatchGameRequest request) {
+        authHelper.requireHost(user, gameId);
+        return gameService.patchGame(gameId, request);
     }
 }

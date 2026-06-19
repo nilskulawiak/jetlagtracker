@@ -2,7 +2,6 @@ package com.nilskulawiak.jetlagtracker.config;
 
 import com.nilskulawiak.jetlagtracker.auth.UserSessionAuthFilter;
 import com.nilskulawiak.jetlagtracker.user.AppUserDetailsService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,10 +24,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final UserSessionAuthFilter userSessionAuthFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -63,7 +59,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, UserSessionAuthFilter userSessionAuthFilter) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

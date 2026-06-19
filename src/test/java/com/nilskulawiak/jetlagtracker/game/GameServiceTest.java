@@ -65,6 +65,7 @@ class GameServiceTest {
         Challenge c3 = challengeWithId(UUID.randomUUID(), game);
 
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(teamRepository.countByGame(game)).thenReturn(2L);
         when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED))
                 .thenReturn(List.of(c1, c2, c3));
 
@@ -83,6 +84,7 @@ class GameServiceTest {
         Game game = gameWithId(UUID.randomUUID(), "Taiwan");
 
         when(gameRepository.findById(game.getId())).thenReturn(Optional.of(game));
+        when(teamRepository.countByGame(game)).thenReturn(2L);
         when(challengeRepository.findByGameAndStatus(game, ChallengeStatus.CREATED))
                 .thenReturn(List.of(challengeWithId(UUID.randomUUID(), game)));
 
