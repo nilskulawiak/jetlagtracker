@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -38,6 +39,18 @@ public class GlobalExceptionHandler {
                 .map(e -> e.getField() + ": " + e.getDefaultMessage())
                 .collect(Collectors.joining(", "));
         return new ErrorResponse(message, Instant.now());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbidden(ForbiddenException ex) {
+        return new ErrorResponse(ex.getMessage(), Instant.now());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleBadCredentials() {
+        return new ErrorResponse("Invalid credentials", Instant.now());
     }
 
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
